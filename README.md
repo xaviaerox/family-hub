@@ -1,6 +1,6 @@
 # Family Hub 🏠
 
-Una PWA móvil para familias con bebés. Registra alimentación, crecimiento, salud y hitos del desarrollo con respaldo en curvas de la OMS — desde el primer día y con soporte para bebés prematuros.
+Una PWA móvil para familias con bebés. Registra alimentación, crecimiento, salud y hitos del desarrollo con respaldo en curvas de la OMS — desde el primer día y con soporte para bebés prematuros. ¡Desplegado y listo!
 
 ---
 
