@@ -139,7 +139,7 @@ export function QuickFeedingForm({
                 <button
                   key={opt.value}
                   type="button"
-                  onClick={() => setReaction(opt.value as any)}
+                  onClick={() => setReaction(opt.value as "none" | "mild" | "moderate" | "severe")}
                   className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-card border transition-all duration-200 ${
                     reaction === opt.value
                       ? opt.activeColor

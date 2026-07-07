@@ -265,8 +265,8 @@ export function FeedingPageClient({
       setCustomMinAge("6");
       setSelectedAllergenIds([]);
       setShowCustomModal(false);
-    } catch (err: any) {
-      setCustomError("Error inesperado: " + err.message);
+    } catch (err: unknown) {
+      setCustomError("Error inesperado: " + (err instanceof Error ? err.message : String(err)));
     } finally {
       setIsSavingCustom(false);
     }
@@ -507,7 +507,7 @@ export function FeedingPageClient({
                   </p>
                   {e.notes && (
                     <p className="text-xs text-neutral-500 dark:text-neutral-400 italic">
-                      "{e.notes}"
+                      &ldquo;{e.notes}&rdquo;
                     </p>
                   )}
                 </div>
@@ -649,7 +649,7 @@ export function FeedingPageClient({
                         )}
                         {h.notes && (
                           <p className="text-xs text-neutral-600 dark:text-neutral-400 italic bg-neutral-50 dark:bg-neutral-950/30 p-2 rounded border border-neutral-100/50 dark:border-neutral-800/30 mt-1">
-                            "{h.notes}"
+                            &ldquo;{h.notes}&rdquo;
                           </p>
                         )}
                       </div>

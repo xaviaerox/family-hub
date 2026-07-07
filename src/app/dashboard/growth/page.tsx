@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { createBrowserSupabaseClient } from "@/infrastructure/supabase/client";
 import { Card } from "@/presentation/components/ui/Card";
 import { Button } from "@/presentation/components/ui/Button";
@@ -11,7 +11,7 @@ import {
   getChronologicalAgeInDays,
   isPrematureBirth,
 } from "@/domain/baby/correctedAge";
-import { Plus, Edit2, Trash2, Calendar, Scale, Ruler, Circle, AlertCircle, Award } from "lucide-react";
+import { Plus, Edit2, Trash2, Scale, Ruler, AlertCircle } from "lucide-react";
 
 interface Baby {
   id: string;
@@ -160,7 +160,8 @@ export default function GrowthPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  const supabase = createBrowserSupabaseClient();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const supabase = useMemo(() => createBrowserSupabaseClient(), []);
 
   useEffect(() => {
     async function loadBabies() {
@@ -223,7 +224,7 @@ export default function GrowthPage() {
       }
     }
     loadBabies();
-  }, []);
+  }, [supabase]);
 
   const activeBaby = babies.find((b) => b.id === activeBabyId);
   const isPremature = activeBaby ? isPrematureBirth(new Date(activeBaby.birthDate), activeBaby.dueDate ? new Date(activeBaby.dueDate) : null) : false;
@@ -269,7 +270,7 @@ export default function GrowthPage() {
     }
 
     loadMeasurements();
-  }, [activeBabyId, useCorrectedAge, babies]);
+  }, [activeBabyId, useCorrectedAge, babies, activeBaby, supabase]);
 
   const handleOpenAdd = () => {
     setEditId(null);

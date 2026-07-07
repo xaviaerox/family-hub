@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createBrowserSupabaseClient } from "@/infrastructure/supabase/client";
-import { Card } from "@/presentation/components/ui/Card";
 import { Button } from "@/presentation/components/ui/Button";
 import { Settings, ChevronRight, AlertTriangle } from "lucide-react";
 import { BabyAvatar, AVATAR_PRESETS } from "@/presentation/components/layout/BabyAvatar";
@@ -320,7 +319,7 @@ export function DashboardClient({
                   {/* Custom URL Input */}
                   <input
                     type="text"
-                    value={AVATAR_PRESETS.includes(editPhotoUrl as any) ? "" : editPhotoUrl}
+                    value={(AVATAR_PRESETS as readonly string[]).includes(editPhotoUrl) ? "" : editPhotoUrl}
                     onChange={(e) => setEditPhotoUrl(e.target.value)}
                     placeholder="O pega una URL de foto..."
                     className="w-full rounded-lg border border-neutral-200 bg-transparent px-4 py-2.5 text-xs dark:border-neutral-700 text-neutral-900 dark:text-white"

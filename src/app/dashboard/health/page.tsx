@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { createBrowserSupabaseClient } from "@/infrastructure/supabase/client";
 import { Card } from "@/presentation/components/ui/Card";
 import { BabyAvatar } from "@/presentation/components/layout/BabyAvatar";
@@ -51,7 +51,8 @@ export default function HealthPage() {
   const [checkedByBaby, setCheckedByBaby] = useState<Record<string, string[]>>({});
   const [isLoading, setIsLoading] = useState(true);
 
-  const supabase = createBrowserSupabaseClient();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const supabase = useMemo(() => createBrowserSupabaseClient(), []);
 
   useEffect(() => {
     async function loadData() {
@@ -113,7 +114,7 @@ export default function HealthPage() {
       }
     }
     loadData();
-  }, []);
+  }, [supabase]);
 
   const activeBaby = babies.find((b) => b.id === activeBabyId);
   const checkedIds = activeBaby ? checkedByBaby[activeBaby.id] || [] : [];

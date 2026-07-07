@@ -66,7 +66,7 @@ export async function listFoodOptions(
 
   if (!foodItems) return [];
 
-  let eventsMap: Record<string, FeedingHistoryEntry[]> = {};
+  const eventsMap: Record<string, FeedingHistoryEntry[]> = {};
   if (babyId) {
     const { data: events } = await supabase
       .from("feeding_events")

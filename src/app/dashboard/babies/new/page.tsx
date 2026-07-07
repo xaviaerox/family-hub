@@ -108,7 +108,7 @@ export default function NewBabyPage() {
           {/* Custom URL Input */}
           <input
             type="text"
-            value={AVATAR_PRESETS.includes(photoUrl as any) ? "" : photoUrl}
+            value={(AVATAR_PRESETS as readonly string[]).includes(photoUrl) ? "" : photoUrl}
             onChange={(e) => setPhotoUrl(e.target.value)}
             placeholder="O pega una URL de foto..."
             className="w-full rounded-lg border border-neutral-200 bg-transparent px-4 py-2.5 text-xs dark:border-neutral-700 text-neutral-900 dark:text-white"
