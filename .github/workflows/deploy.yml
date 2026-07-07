@@ -1,0 +1,105 @@
+# ─── CI / CD ──────────────────────────────────────────────────────────────────
+# Flujo:
+#   1. En cada Pull Request → ejecuta lint + typecheck + tests (CI)
+#   2. En cada push a main  → CI + deploy a Vercel (CD)
+#
+# Secrets requeridos en GitHub → Settings → Secrets and variables → Actions:
+#   VERCEL_TOKEN          → vercel.com → Account Settings → Tokens
+#   VERCEL_ORG_ID         → obtenido con `vercel link` (en .vercel/project.json)
+#   VERCEL_PROJECT_ID     → obtenido con `vercel link` (en .vercel/project.json)
+#   NEXT_PUBLIC_SUPABASE_URL           → URL de tu proyecto Supabase
+#   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY → anon key de tu proyecto Supabase
+# ──────────────────────────────────────────────────────────────────────────────
+
+name: CI / Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── Job 1: Quality checks ──────────────────────────────────────────────────
+  ci:
+    name: Lint · Typecheck · Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm run test
+
+  # ── Job 2: Deploy to Vercel (solo en push a main) ─────────────────────────
+  deploy:
+    name: Deploy → Vercel
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel environment
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build project
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
+      - name: Add deployment comment to PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ **Desplegado en producción:** ${{ steps.deploy.outputs.url }}`
+            })

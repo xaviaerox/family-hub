@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --surface: 0 0% 100%;
+  --surface-elevated: 0 0% 98%;
+  --accent: 217 91% 60%;
+}
+
+.dark {
+  --surface: 0 0% 7%;
+  --surface-elevated: 0 0% 10%;
+  --accent: 217 91% 65%;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}

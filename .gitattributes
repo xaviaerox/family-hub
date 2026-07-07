@@ -1,0 +1,19 @@
+# Normaliza los saltos de línea al hacer checkout en cualquier SO.
+# Los archivos de texto usan LF en el repo (estándar en Linux/macOS/CI).
+* text=auto eol=lf
+
+# Archivos binarios: nunca tocar saltos de línea
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.svg text eol=lf
+
+# Scripts de shell siempre LF
+*.sh text eol=lf
+
+# Windows batch: CRLF localmente
+*.bat text eol=crlf
+*.cmd text eol=crlf
