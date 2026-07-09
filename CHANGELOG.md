@@ -1,5 +1,14 @@
 # CHANGELOG.md
 
+## [0.14.0] - Tarea 14: Edición de Tomas de Alimentos y Prevención de Duplicados
+### Añadido
+- **Edición de Tomas**: Habilitada la edición de tomas registradas en la sección de Alimentación. Ahora los padres pueden actualizar la reacción del bebé (Ninguna, Leve, Moderada, Grave) y añadir o modificar notas/observaciones sobre cualquier hito.
+- **Acceso Directo**: Incorporados botones de edición (lápiz) tanto en el listado histórico de "Últimas Tomas" en la vista principal como en el "Historial de Tomas" del cajón de detalles de cada alimento.
+- **Sincronización en Caliente**: Implementada la reactividad del frontend para recalcular en caliente el estado de tolerancia del alimento ("Tolerado", "Alerta Leve" o "Alergia/Grave") y actualizar el rastreador de alérgenos (EFSA) sin forzar una recarga completa.
+- **Prevención de Duplicados**: Añadida validación insensible a mayúsculas, minúsculas, espacios y acentos en el frontend al registrar alimentos personalizados.
+- **Índice Único en Supabase**: Creado el archivo de migración `0007_prevent_duplicate_food_items.sql` para establecer una restricción de clave única compuesta `(family_id, name)` sobre `food_items` en Supabase.
+- **Consolidación de Alimentos**: Solucionado el duplicado existente de "Sandia", eliminando el registro inactivo y su toma redundante de prueba, conservando el activo con exactamente sus 2 tomas de resultado positivo.
+
 ## [0.13.0] - Tarea 13: Persistencia de Vacunas, Creador de Alimentos e Hitos OMS
 ### Añadido
 - **Persistencia de Vacunas**: Creada la tabla `vaccine_logs` en Supabase con políticas RLS e integrada sincronización en tiempo real en la cartilla de inmunización de Salud.

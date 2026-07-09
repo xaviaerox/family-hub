@@ -1,5 +1,34 @@
 # TASKS.md
 
+## Tarea 14 — Edición de Tomas de Alimentos y Prevención de Duplicados ✅ COMPLETADA
+
+### Contexto
+El usuario solicitó que las tomas de alimentos registradas ("hitos") se puedan editar con posterioridad para ajustar la reacción (por si aparece algún síntoma o alergia más tarde) o para añadir/modificar observaciones (por si olvidó incluir algún detalle). También se identificaron alimentos personalizados duplicados (por ejemplo, "Sandia"), requiriendo consolidación y mecanismos para evitar duplicados en el futuro.
+
+### Resumen
+- **Zod Schema**: Definido `updateFeedingEventSchema` para validar la edición (`eventId` UUID, `reaction` enum, `notes` string opcional).
+- **Aplicación**: Añadido el caso de uso `updateFeedingEvent.ts` para persistir los cambios en la tabla `feeding_events` de Supabase.
+- **Consultas**: Modificada la capa de consulta `listFeeding.ts` para incluir el `id` del evento en cada `FeedingHistoryEntry`.
+- **Interfaz (UI)**:
+  - Añadido un botón de edición (icono lápiz) a la derecha de cada toma en la sección "Últimas Tomas" de la pantalla principal.
+  - Añadido un botón de edición al lado de cada toma en el "Historial de Tomas" dentro del cajón de detalles de cada alimento.
+  - Añadido un Edit Modal con un formulario de edición rápida que cuenta con el selector visual de reacciones (Ninguna, Leve, Moderada, Grave) y campo de observaciones.
+  - Sincronización local reactiva (`handleUpdated`) que recalcula el estado de tolerancia del alimento ("Tolerado", "Alerta Leve", "Alergia/Grave") y los alérgenos sin requerir recargar la página.
+- **Validación anti-duplicados**: Implementada comprobación de duplicados insensible a mayúsculas, minúsculas, acentos y espacios al crear alimentos en el cliente.
+- **Migración DDL Supabase**: Creada migración `0007_prevent_duplicate_food_items.sql` que establece un índice único compuesto `(family_id, name)` para evitar duplicidad de nombres a nivel de base de datos.
+- **Limpieza de "Sandia"**: Ejecutado un script de limpieza SQL en Supabase para borrar la sandía inactiva (ID `3944e8e1-...`) junto con su toma inicial redundante de prueba, dejando la sandía en uso con exactamente sus 2 tomas de resultado positivo.
+
+### Archivos modificados
+- [feeding.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/shared/schemas/feeding.ts)
+- [updateFeedingEvent.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/application/feeding/updateFeedingEvent.ts) [NUEVO]
+- [listFeeding.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/application/feeding/listFeeding.ts)
+- [FeedingPageClient.tsx](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/presentation/components/feeding/FeedingPageClient.tsx)
+- [0007_prevent_duplicate_food_items.sql](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/supabase/migrations/0007_prevent_duplicate_food_items.sql) [NUEVO]
+- [CHANGELOG.md](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/CHANGELOG.md)
+- [TASKS.md](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/TASKS.md)
+
+---
+
 ## Tarea 6 — Unificación: Family Hub pasa a vivir dentro de `human` ✅ COMPLETADA
 
 ### Contexto

@@ -6,6 +6,7 @@ export interface Allergen {
 }
 
 export interface FeedingHistoryEntry {
+  id: string;
   occurredAt: string;
   reaction: string;
   notes: string | null;
@@ -70,7 +71,7 @@ export async function listFoodOptions(
   if (babyId) {
     const { data: events } = await supabase
       .from("feeding_events")
-      .select("food_item_id, occurred_at, reaction, notes")
+      .select("id, food_item_id, occurred_at, reaction, notes")
       .eq("baby_id", babyId)
       .is("deleted_at", null)
       .order("occurred_at", { ascending: false });
@@ -79,6 +80,7 @@ export async function listFoodOptions(
       for (const e of events) {
         const arr = eventsMap[e.food_item_id] ?? [];
         arr.push({
+          id: e.id,
           occurredAt: e.occurred_at,
           reaction: e.reaction,
           notes: e.notes,

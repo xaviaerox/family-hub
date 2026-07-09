@@ -21,6 +21,10 @@ import {
   Plus,
   CheckCircle2,
   HelpCircle,
+  Pencil,
+  Smile,
+  Frown,
+  Meh,
   type LucideIcon
 } from "lucide-react";
 
@@ -104,6 +108,16 @@ export function FeedingPageClient({
   const [isSavingCustom, setIsSavingCustom] = useState(false);
   const [customError, setCustomError] = useState<string | null>(null);
 
+  // Edit Feeding Event Modal State
+  const [editingEvent, setEditingEvent] = useState<{
+    id: string;
+    foodName: string;
+    reaction: "none" | "mild" | "moderate" | "severe";
+    notes: string | null;
+  } | null>(null);
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
+
   const supabase = createBrowserSupabaseClient();
 
   const handleRegistered = (newEvent: RecentFeedingEvent) => {
@@ -113,6 +127,7 @@ export function FeedingPageClient({
       prevFoods.map((f) => {
         if (f.id === newEvent.foodItemId) {
           const newEntry = {
+            id: newEvent.id,
             occurredAt: newEvent.occurredAt,
             reaction: newEvent.reaction,
             notes: newEvent.notes,
@@ -137,6 +152,57 @@ export function FeedingPageClient({
     );
 
     setPreselectedFoodId(undefined);
+  };
+
+  const handleUpdated = (updatedEvent: {
+    id: string;
+    reaction: "none" | "mild" | "moderate" | "severe";
+    notes: string | null;
+  }) => {
+    setEvents((prev) =>
+      prev.map((e) =>
+        e.id === updatedEvent.id
+          ? { ...e, reaction: updatedEvent.reaction, notes: updatedEvent.notes }
+          : e
+      )
+    );
+
+    setFoods((prevFoods) =>
+      prevFoods.map((f) => {
+        const hasEvent = f.history.some((h) => h.id === updatedEvent.id);
+        if (!hasEvent) return f;
+
+        const updatedHistory = f.history.map((h) =>
+          h.id === updatedEvent.id
+            ? { ...h, reaction: updatedEvent.reaction, notes: updatedEvent.notes }
+            : h
+        );
+
+        let newStatus: FoodOption["status"] = "untried";
+        const latest = updatedHistory[0];
+        if (latest) {
+          if (latest.reaction === "none") {
+            newStatus = "accepted";
+          } else if (latest.reaction === "mild") {
+            newStatus = "mild";
+          } else {
+            newStatus = "severe";
+          }
+        }
+
+        const updatedFood = {
+          ...f,
+          status: newStatus,
+          history: updatedHistory,
+        };
+
+        if (selectedFood && selectedFood.id === f.id) {
+          setSelectedFood(updatedFood);
+        }
+
+        return updatedFood;
+      })
+    );
   };
 
   const stats = useMemo(() => {
@@ -199,6 +265,18 @@ export function FeedingPageClient({
 
     setIsSavingCustom(true);
     setCustomError(null);
+
+    const normalizeString = (str: string) =>
+      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
+    const normalizedNewName = normalizeString(customName);
+    const exists = foods.some((f) => normalizeString(f.name) === normalizedNewName);
+
+    if (exists) {
+      setCustomError("Este alimento ya está registrado en tu catálogo.");
+      setIsSavingCustom(false);
+      return;
+    }
 
     try {
       // Fetch baby family_id
@@ -493,7 +571,7 @@ export function FeedingPageClient({
             {events.length === 0 && <p className="text-xs text-neutral-400 py-4 text-center">Aún no hay tomas registradas.</p>}
             {events.slice(0, 10).map((e) => (
               <Card key={e.id} className="flex items-center justify-between py-3.5 px-4 shadow-sm">
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 flex-1 mr-4">
                   <p className="text-[15px] font-semibold text-neutral-900 dark:text-white">
                     {e.foodName}
                   </p>
@@ -511,15 +589,32 @@ export function FeedingPageClient({
                     </p>
                   )}
                 </div>
-                {e.reaction !== "none" && (
-                  <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold border ${
-                    e.reaction === "mild" 
-                      ? "bg-amber-50 text-amber-855 border-amber-250 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900/30"
-                      : "bg-red-50 text-red-800 border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-900/30"
-                  }`}>
-                    {REACTION_LABELS[e.reaction] || e.reaction}
-                  </span>
-                )}
+                <div className="flex items-center gap-2">
+                  {e.reaction !== "none" && (
+                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold border ${
+                      e.reaction === "mild" 
+                        ? "bg-amber-50 text-amber-855 border-amber-250 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900/30"
+                        : "bg-red-50 text-red-800 border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-900/30"
+                    }`}>
+                      {REACTION_LABELS[e.reaction] || e.reaction}
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingEvent({
+                        id: e.id,
+                        foodName: e.foodName,
+                        reaction: e.reaction as any,
+                        notes: e.notes,
+                      });
+                    }}
+                    className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 p-1.5 rounded-lg border border-neutral-100 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors shadow-sm"
+                    title="Editar toma"
+                  >
+                    <Pencil size={13} />
+                  </button>
+                </div>
               </Card>
             ))}
           </div>
@@ -629,14 +724,31 @@ export function FeedingPageClient({
                           <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
                             Toma #{selectedFood.history.length - i}
                           </span>
-                          <span className="text-[10px] text-neutral-400">
-                            {new Date(h.occurredAt).toLocaleDateString("es-ES", {
-                              day: "numeric",
-                              month: "short",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] text-neutral-400">
+                              {new Date(h.occurredAt).toLocaleDateString("es-ES", {
+                                day: "numeric",
+                                month: "short",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditingEvent({
+                                  id: h.id,
+                                  foodName: selectedFood.name,
+                                  reaction: h.reaction as any,
+                                  notes: h.notes,
+                                });
+                              }}
+                              className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 p-1 rounded hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                              title="Editar toma"
+                            >
+                              <Pencil size={12} />
+                            </button>
+                          </div>
                         </div>
                         {h.reaction !== "none" && (
                           <span className={`inline-block text-[9px] px-1.5 py-0.5 rounded border font-bold mb-1 ${
@@ -768,6 +880,117 @@ export function FeedingPageClient({
                 <div className="pt-2">
                   <Button type="submit" className="w-full justify-center" disabled={isSavingCustom}>
                     {isSavingCustom ? "Guardando..." : "Crear Alimento"}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* EDIT EVENT MODAL */}
+        {editingEvent && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+            <div className="absolute inset-0" onClick={() => setEditingEvent(null)} />
+
+            <div className="relative w-full max-w-sm bg-white dark:bg-neutral-900 rounded-2xl p-6 shadow-xl border border-neutral-100 dark:border-neutral-800 max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-bold text-neutral-900 dark:text-white truncate pr-2">
+                  Editar toma: {editingEvent.foodName}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setEditingEvent(null)}
+                  className="w-7 h-7 rounded-full bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 flex items-center justify-center text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700 shrink-0"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {editError && (
+                <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 rounded-lg text-xs text-red-650 dark:text-red-400">
+                  {editError}
+                </div>
+              )}
+
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                setIsSavingEdit(true);
+                setEditError(null);
+
+                try {
+                  const { updateFeedingEvent } = await import("@/application/feeding/updateFeedingEvent");
+                  const result = await updateFeedingEvent(supabase, {
+                    eventId: editingEvent.id,
+                    reaction: editingEvent.reaction,
+                    notes: editingEvent.notes?.trim() || null,
+                  });
+
+                  if (!result.ok) {
+                    setEditError(result.error ?? "No se pudo actualizar.");
+                    return;
+                  }
+
+                  handleUpdated({
+                    id: editingEvent.id,
+                    reaction: editingEvent.reaction,
+                    notes: editingEvent.notes?.trim() || null,
+                  });
+
+                  setEditingEvent(null);
+                } catch (err: unknown) {
+                  setEditError("Error inesperado: " + (err instanceof Error ? err.message : String(err)));
+                } finally {
+                  setIsSavingEdit(false);
+                }
+              }} className="space-y-4">
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-neutral-500">
+                    Reacción
+                  </label>
+                  <div className="grid grid-cols-4 gap-2">
+                    {[
+                      { value: "none", icon: Smile, label: "Ninguna", color: "border-green-200 text-green-700 hover:bg-green-50/30", activeColor: "border-green-600 bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-400 ring-2 ring-green-600/25" },
+                      { value: "mild", icon: Frown, label: "Leve", color: "border-amber-200 text-amber-700 hover:bg-amber-50/30", activeColor: "border-amber-600 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 ring-2 ring-amber-600/25" },
+                      { value: "moderate", icon: Meh, label: "Mod.", color: "border-orange-200 text-orange-700 hover:bg-orange-50/30", activeColor: "border-orange-600 bg-amber-50 dark:bg-orange-950/40 text-orange-700 dark:text-orange-400 ring-2 ring-orange-600/25" },
+                      { value: "severe", icon: AlertTriangle, label: "Grave", color: "border-red-200 text-red-700 hover:bg-red-50/30", activeColor: "border-red-600 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 ring-2 ring-red-600/25" },
+                    ].map((opt) => {
+                      const IconComp = opt.icon;
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => setEditingEvent({ ...editingEvent, reaction: opt.value as any })}
+                          className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-card border transition-all duration-200 ${
+                            editingEvent.reaction === opt.value
+                              ? opt.activeColor
+                              : `${opt.color} border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300`
+                          }`}
+                        >
+                          <IconComp size={18} className="mb-1" />
+                          <span className="text-xs font-medium">{opt.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-neutral-500">
+                    Observaciones
+                  </label>
+                  <textarea
+                    value={editingEvent.notes ?? ""}
+                    onChange={(e) => setEditingEvent({ ...editingEvent, notes: e.target.value })}
+                    placeholder="Ej. Le gustó mucho, comió la mitad, sarpullido..."
+                    rows={3}
+                    maxLength={500}
+                    className="w-full rounded-card border border-neutral-200 bg-transparent px-4 py-3 text-[15px] dark:border-neutral-700 placeholder:text-neutral-400 focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white transition-all duration-200"
+                  />
+                </div>
+
+                <div className="pt-2">
+                  <Button type="submit" className="w-full justify-center" disabled={isSavingEdit}>
+                    {isSavingEdit ? "Guardando..." : "Guardar Cambios"}
                   </Button>
                 </div>
               </form>
