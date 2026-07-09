@@ -8,7 +8,7 @@ export interface Allergen {
 export interface FeedingHistoryEntry {
   id: string;
   occurredAt: string;
-  reaction: string;
+  reaction: "none" | "mild" | "moderate" | "severe";
   notes: string | null;
 }
 
@@ -134,7 +134,7 @@ export async function listFoodOptions(
 export interface RecentFeedingEvent {
   id: string;
   occurredAt: string;
-  reaction: string;
+  reaction: "none" | "mild" | "moderate" | "severe";
   notes: string | null;
   foodItemId: string;
   foodName: string;

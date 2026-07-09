@@ -78,6 +78,13 @@ const STATUS_INFO = {
   },
 };
 
+const REACTION_OPTIONS = [
+  { value: "none", icon: Smile, label: "Ninguna", color: "border-green-200 text-green-700 hover:bg-green-50/30", activeColor: "border-green-600 bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-400 ring-2 ring-green-600/25" },
+  { value: "mild", icon: Frown, label: "Leve", color: "border-amber-200 text-amber-700 hover:bg-amber-50/30", activeColor: "border-amber-600 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 ring-2 ring-amber-600/25" },
+  { value: "moderate", icon: Meh, label: "Mod.", color: "border-orange-200 text-orange-700 hover:bg-orange-50/30", activeColor: "border-orange-600 bg-amber-50 dark:bg-orange-950/40 text-orange-700 dark:text-orange-400 ring-2 ring-orange-600/25" },
+  { value: "severe", icon: AlertTriangle, label: "Grave", color: "border-red-200 text-red-700 hover:bg-red-50/30", activeColor: "border-red-600 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 ring-2 ring-red-600/25" },
+] as const;
+
 export function FeedingPageClient({
   babyId,
   babyName,
@@ -605,7 +612,7 @@ export function FeedingPageClient({
                       setEditingEvent({
                         id: e.id,
                         foodName: e.foodName,
-                        reaction: e.reaction as any,
+                        reaction: e.reaction,
                         notes: e.notes,
                       });
                     }}
@@ -739,7 +746,7 @@ export function FeedingPageClient({
                                 setEditingEvent({
                                   id: h.id,
                                   foodName: selectedFood.name,
-                                  reaction: h.reaction as any,
+                                  reaction: h.reaction,
                                   notes: h.notes,
                                 });
                               }}
@@ -948,18 +955,13 @@ export function FeedingPageClient({
                     Reacción
                   </label>
                   <div className="grid grid-cols-4 gap-2">
-                    {[
-                      { value: "none", icon: Smile, label: "Ninguna", color: "border-green-200 text-green-700 hover:bg-green-50/30", activeColor: "border-green-600 bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-400 ring-2 ring-green-600/25" },
-                      { value: "mild", icon: Frown, label: "Leve", color: "border-amber-200 text-amber-700 hover:bg-amber-50/30", activeColor: "border-amber-600 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 ring-2 ring-amber-600/25" },
-                      { value: "moderate", icon: Meh, label: "Mod.", color: "border-orange-200 text-orange-700 hover:bg-orange-50/30", activeColor: "border-orange-600 bg-amber-50 dark:bg-orange-950/40 text-orange-700 dark:text-orange-400 ring-2 ring-orange-600/25" },
-                      { value: "severe", icon: AlertTriangle, label: "Grave", color: "border-red-200 text-red-700 hover:bg-red-50/30", activeColor: "border-red-600 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400 ring-2 ring-red-600/25" },
-                    ].map((opt) => {
+                    {REACTION_OPTIONS.map((opt) => {
                       const IconComp = opt.icon;
                       return (
                         <button
                           key={opt.value}
                           type="button"
-                          onClick={() => setEditingEvent({ ...editingEvent, reaction: opt.value as any })}
+                          onClick={() => setEditingEvent({ ...editingEvent, reaction: opt.value })}
                           className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-card border transition-all duration-200 ${
                             editingEvent.reaction === opt.value
                               ? opt.activeColor
