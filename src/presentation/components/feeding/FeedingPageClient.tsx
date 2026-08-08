@@ -3,6 +3,9 @@
 import { useMemo, useState } from "react";
 import { QuickFeedingForm, REACTION_LABELS } from "./QuickFeedingForm";
 import type { FoodOption, RecentFeedingEvent } from "@/application/feeding/listFeeding";
+import { calculateFoodStatus } from "@/domain/feeding/foodStatus";
+import { FoodChecklistPoster } from "./FoodChecklistPoster";
+import { FoodStatusCircle } from "./FoodStatusCircle";
 import { Card } from "@/presentation/components/ui/Card";
 import { Button } from "@/presentation/components/ui/Button";
 import { Input } from "@/presentation/components/ui/Input";
@@ -25,6 +28,8 @@ import {
   Smile,
   Frown,
   Meh,
+  LayoutGrid,
+  ClipboardList,
   type LucideIcon
 } from "lucide-react";
 
@@ -55,16 +60,31 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
   otro: Utensils,
 };
 
-const STATUS_INFO = {
+const STATUS_INFO: Record<string, { label: string; color: string; dot: string }> = {
   untried: {
-    label: "Pendiente",
+    label: "No probado",
     color: "bg-neutral-50 text-neutral-400 border-neutral-200 dark:bg-neutral-900 dark:text-neutral-500",
     dot: "bg-neutral-300 dark:bg-neutral-600",
+  },
+  trying: {
+    label: "Probando (1-2)",
+    color: "bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400 border-amber-200 dark:border-amber-900/30",
+    dot: "bg-amber-500",
+  },
+  tolerated: {
+    label: "Tolerado (3+)",
+    color: "bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-400 border-green-200 dark:border-green-900/30",
+    dot: "bg-green-500",
   },
   accepted: {
     label: "Tolerado",
     color: "bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-400 border-green-200 dark:border-green-900/30",
     dot: "bg-green-500",
+  },
+  reaction: {
+    label: "Reacción",
+    color: "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400 border-red-200 dark:border-red-900/30",
+    dot: "bg-red-500",
   },
   mild: {
     label: "Alerta Leve",
@@ -103,6 +123,7 @@ export function FeedingPageClient({
   const [events, setEvents] = useState<RecentFeedingEvent[]>(initialEvents);
   const [foods, setFoods] = useState<FoodOption[]>(foodOptions);
   const [activeTab, setActiveTab] = useState<string>("all");
+  const [viewMode, setViewMode] = useState<"poster" | "cards">("poster");
   const [selectedFood, setSelectedFood] = useState<FoodOption | null>(null);
   const [preselectedFoodId, setPreselectedFoodId] = useState<string | undefined>(undefined);
   
@@ -140,13 +161,7 @@ export function FeedingPageClient({
             notes: newEvent.notes,
           };
           const updatedHistory = [newEntry, ...f.history];
-          
-          let newStatus: FoodOption["status"] = "accepted";
-          if (newEvent.reaction === "mild") {
-            newStatus = "mild";
-          } else if (newEvent.reaction !== "none") {
-            newStatus = "severe";
-          }
+          const newStatus = calculateFoodStatus(updatedHistory);
 
           return {
             ...f,
@@ -185,17 +200,7 @@ export function FeedingPageClient({
             : h
         );
 
-        let newStatus: FoodOption["status"] = "untried";
-        const latest = updatedHistory[0];
-        if (latest) {
-          if (latest.reaction === "none") {
-            newStatus = "accepted";
-          } else if (latest.reaction === "mild") {
-            newStatus = "mild";
-          } else {
-            newStatus = "severe";
-          }
-        }
+        const newStatus = calculateFoodStatus(updatedHistory);
 
         const updatedFood = {
           ...f,
@@ -502,71 +507,111 @@ export function FeedingPageClient({
           />
         </div>
 
-        {/* Foods Map */}
+        {/* Foods Map & Poster Checklist */}
         <div className="mb-8">
-          <h2 className="mb-3 text-xs font-bold text-neutral-400 uppercase tracking-wider">
-            Mapa de Alimentos
-          </h2>
-
-          <div className="flex gap-1.5 overflow-x-auto pb-3 scrollbar-none mb-4 -mx-6 px-6">
-            {CATEGORIES.map((tab) => (
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">
+              Catálogo de Alimentos
+            </h2>
+            
+            {/* VIEW MODE TOGGLE */}
+            <div className="flex bg-neutral-100 dark:bg-neutral-800 p-0.5 rounded-xl text-xs">
               <button
-                key={tab.slug}
                 type="button"
-                onClick={() => setActiveTab(tab.slug)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-200 ${
-                  activeTab === tab.slug
-                    ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm"
-                    : "bg-neutral-50 text-neutral-500 dark:bg-neutral-900 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                onClick={() => setViewMode("poster")}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-medium transition-all ${
+                  viewMode === "poster"
+                    ? "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-semibold"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
                 }`}
               >
-                {tab.label}
+                <ClipboardList size={13} />
+                <span>Cartel Poster</span>
               </button>
-            ))}
+              <button
+                type="button"
+                onClick={() => setViewMode("cards")}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-medium transition-all ${
+                  viewMode === "cards"
+                    ? "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white shadow-xs font-semibold"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
+                }`}
+              >
+                <LayoutGrid size={13} />
+                <span>Tarjetas</span>
+              </button>
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            {filteredFoods.map((f) => {
-              const s = STATUS_INFO[f.status];
-              const hasAllergens = f.allergens.length > 0;
-              const IconComp = CATEGORY_ICONS[f.category] ?? Utensils;
-              return (
-                <button
-                  key={f.id}
-                  type="button"
-                  onClick={() => setSelectedFood(f)}
-                  className="flex flex-col text-left p-3.5 rounded-card border border-neutral-100 dark:border-neutral-800/80 bg-white dark:bg-neutral-900 hover:border-neutral-300 dark:hover:border-neutral-700 active:scale-[0.98] hover:scale-[1.01] transition-all duration-200 shadow-sm"
-                >
-                  <div className="flex items-center justify-between gap-1 mb-2.5">
-                    <span className="text-[9px] uppercase font-bold tracking-wider text-neutral-400">
-                      {f.category}
-                    </span>
-                    {hasAllergens && (
-                      <span title="Contiene alérgenos">
-                        <AlertCircle className="w-3.5 h-3.5 text-amber-500" />
-                      </span>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-100 dark:border-neutral-800/50 shrink-0">
-                      <IconComp size={15} strokeWidth={2} />
-                    </div>
-                    <span className="text-[13px] font-bold text-neutral-800 dark:text-neutral-100 line-clamp-1">
-                      {f.name}
-                    </span>
-                  </div>
+          {viewMode === "poster" ? (
+            <FoodChecklistPoster
+              foods={foods}
+              babyName={babyName}
+              onSelectFood={(f) => setSelectedFood(f)}
+            />
+          ) : (
+            <>
+              <div className="flex gap-1.5 overflow-x-auto pb-3 scrollbar-none mb-4 -mx-6 px-6">
+                {CATEGORIES.map((tab) => (
+                  <button
+                    key={tab.slug}
+                    type="button"
+                    onClick={() => setActiveTab(tab.slug)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-200 ${
+                      activeTab === tab.slug
+                        ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm"
+                        : "bg-neutral-50 text-neutral-500 dark:bg-neutral-900 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
 
-                  <div className="mt-auto flex items-center gap-1.5">
-                    <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
-                    <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
-                      {s.label}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+              <div className="grid grid-cols-2 gap-3">
+                {filteredFoods.map((f) => {
+                  const s = STATUS_INFO[f.status] ?? STATUS_INFO.untried;
+                  const hasAllergens = f.allergens.length > 0;
+                  const IconComp = CATEGORY_ICONS[f.category] ?? Utensils;
+                  return (
+                    <button
+                      key={f.id}
+                      type="button"
+                      onClick={() => setSelectedFood(f)}
+                      className="flex flex-col text-left p-3.5 rounded-card border border-neutral-100 dark:border-neutral-800/80 bg-white dark:bg-neutral-900 hover:border-neutral-300 dark:hover:border-neutral-700 active:scale-[0.98] hover:scale-[1.01] transition-all duration-200 shadow-sm"
+                    >
+                      <div className="flex items-center justify-between gap-1 mb-2.5">
+                        <span className="text-[9px] uppercase font-bold tracking-wider text-neutral-400">
+                          {f.category}
+                        </span>
+                        {hasAllergens && (
+                          <span title="Contiene alérgenos">
+                            <AlertCircle className="w-3.5 h-3.5 text-amber-500" />
+                          </span>
+                        )}
+                      </div>
+                      
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-100 dark:border-neutral-800/50 shrink-0">
+                          <IconComp size={15} strokeWidth={2} />
+                        </div>
+                        <span className="text-[13px] font-bold text-neutral-800 dark:text-neutral-100 line-clamp-1">
+                          {f.name}
+                        </span>
+                      </div>
+
+                      <div className="mt-auto flex items-center justify-between gap-1.5">
+                        <span className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+                          {s.label}
+                        </span>
+                        <FoodStatusCircle status={f.status} size={16} />
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Recent Intake Logs */}

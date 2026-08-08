@@ -1,4 +1,5 @@
 import type { TypedSupabaseClient } from "@/infrastructure/supabase/database.types";
+import { calculateFoodStatus, type FoodToleranceStatus } from "@/domain/feeding/foodStatus";
 
 export interface Allergen {
   name: string;
@@ -18,7 +19,7 @@ export interface FoodOption {
   category: string;
   minAgeDays: number;
   allergens: Allergen[];
-  status: "untried" | "accepted" | "mild" | "severe";
+  status: FoodToleranceStatus | "accepted" | "mild" | "severe";
   history: FeedingHistoryEntry[];
 }
 
@@ -92,19 +93,7 @@ export async function listFoodOptions(
 
   return foodItems.map((item) => {
     const history = eventsMap[item.id] ?? [];
-    
-    let status: FoodOption["status"] = "untried";
-    const latest = history[0];
-    if (latest) {
-      const latestReaction = latest.reaction;
-      if (latestReaction === "none") {
-        status = "accepted";
-      } else if (latestReaction === "mild") {
-        status = "mild";
-      } else {
-        status = "severe";
-      }
-    }
+    const status = calculateFoodStatus(history);
 
     const allergens: Allergen[] = [];
     if (Array.isArray(item.food_allergens)) {

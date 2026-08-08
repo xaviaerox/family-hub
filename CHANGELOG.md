@@ -1,5 +1,16 @@
 # CHANGELOG.md
 
+## [0.15.0] - Tarea 15: Visualización de "Primeros Alimentos" (Checklist & Cartel Poster)
+### Añadido
+- **Módulo de Dominio (`foodStatus.ts`)**: Creado el cálculo de estado de tolerancia de alimentos según el historial de tomas:
+  - ⚪ **No probado (`untried`)**: 0 tomas registradas.
+  - 🌓 **Probando (`trying`)**: 1-2 tomas sin reacción adversa.
+  - 🌑 **Tolerado (`tolerated`)**: 3+ tomas sin reacción adversa.
+  - ⚠️ **Reacción (`reaction`)**: 1+ tomas con reacción leve, moderada o grave.
+- **Componente `FoodStatusCircle.tsx`**: Componente SVG interactivo para renderizar los círculos de estado (vacío, semi relleno, completo y alerta) con diseño SVG puro.
+- **Componente `FoodChecklistPoster.tsx`**: Visualizador e impresor en formato cartel ("Primeros Alimentos") categorizado por Frutas, Verduras, Hidratos, Lácteos, Proteínas, Otros Sabores y Alérgenos, con leyenda ilustrativa y bloque explicativo "Inténtalo 5 veces".
+- **Selector de Vista**: Incorporado un selector de modo de vista (Cartel Poster vs. Mosaico de Tarjetas) en la pantalla principal de Alimentación (`FeedingPageClient.tsx`).
+
 ## [0.14.0] - Tarea 14: Edición de Tomas de Alimentos y Prevención de Duplicados
 ### Añadido
 - **Edición de Tomas**: Habilitada la edición de tomas registradas en la sección de Alimentación. Ahora los padres pueden actualizar la reacción del bebé (Ninguna, Leve, Moderada, Grave) y añadir o modificar notas/observaciones sobre cualquier hito.

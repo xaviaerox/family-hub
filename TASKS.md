@@ -1,5 +1,33 @@
 # TASKS.md
 
+## Tarea 15 — Visualización de "Primeros Alimentos" (Checklist & Cartel Poster) ✅ COMPLETADA
+
+### Contexto
+El usuario solicitó una visualización genérica e interactiva tipo cartel/poster ("Primeros Alimentos") basada en una imagen de referencia, para ver de un vistazo los alimentos por probar con un círculo en blanco (⚪), probados con círculo semi relleno (🌓) y tolerados con círculo completo (🌑).
+
+### Resumen
+- **Dominio (`foodStatus.ts`)**: Creado el módulo de cálculo de estado de tolerancia de alimentos con pruebas unitarias (`foodStatus.test.ts`):
+  - `untried`: 0 tomas (Círculo en blanco ⚪).
+  - `trying`: 1-2 tomas sin reacción (Círculo semi relleno 🌓).
+  - `tolerated`: 3+ tomas sin reacción (Círculo completo 🌑).
+  - `reaction`: 1+ tomas con reacción (Icono/Círculo de alerta ⚠️).
+- **Componentes de Presentación**:
+  - `FoodStatusCircle.tsx`: Renderizador SVG de los estados de los círculos.
+  - `FoodChecklistPoster.tsx`: Cartel interactivo y responsive con el diseño de la imagen de referencia (categorías Frutas, Verduras, Hidratos, Lácteos, Proteínas, Otros Sabores, Alérgenos, leyenda y recomendación "Inténtalo 5 veces").
+  - `FeedingPageClient.tsx`: Integrado un selector de vista (Cartel Poster vs. Tarjetas Mosaico).
+
+### Archivos creados / modificados
+- [foodStatus.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/domain/feeding/foodStatus.ts) [NUEVO]
+- [foodStatus.test.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/domain/feeding/__tests__/foodStatus.test.ts) [NUEVO]
+- [FoodStatusCircle.tsx](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/presentation/components/feeding/FoodStatusCircle.tsx) [NUEVO]
+- [FoodChecklistPoster.tsx](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/presentation/components/feeding/FoodChecklistPoster.tsx) [NUEVO]
+- [listFeeding.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/application/feeding/listFeeding.ts)
+- [FeedingPageClient.tsx](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/presentation/components/feeding/FeedingPageClient.tsx)
+- [CHANGELOG.md](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/CHANGELOG.md)
+- [TASKS.md](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/TASKS.md)
+
+---
+
 ## Tarea 14 — Edición de Tomas de Alimentos y Prevención de Duplicados ✅ COMPLETADA
 
 ### Contexto
