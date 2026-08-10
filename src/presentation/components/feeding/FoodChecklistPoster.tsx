@@ -12,7 +12,8 @@ import {
   Sparkles,
   ShieldAlert,
   Info,
-  Heart
+  Heart,
+  type LucideIcon
 } from "lucide-react";
 
 interface FoodChecklistPosterProps {
@@ -24,7 +25,7 @@ interface FoodChecklistPosterProps {
 // Map categories to display headers and color themes
 const CATEGORY_CONFIG: Record<
   string,
-  { label: string; icon: React.ComponentType<{ size?: number; className?: string }>; bgHeader: string; border: string }
+  { label: string; icon: LucideIcon; bgHeader: string; border: string }
 > = {
   fruta: {
     label: "FRUTAS",

@@ -98,6 +98,16 @@ const STATUS_INFO: Record<string, { label: string; color: string; dot: string }>
   },
 };
 
+function getStatusInfo(status: string) {
+  return (
+    STATUS_INFO[status] ?? {
+      label: "No probado",
+      color: "bg-neutral-50 text-neutral-400 border-neutral-200 dark:bg-neutral-900 dark:text-neutral-500",
+      dot: "bg-neutral-300 dark:bg-neutral-600",
+    }
+  );
+}
+
 const REACTION_OPTIONS = [
   { value: "none", icon: Smile, label: "Ninguna", color: "border-green-200 text-green-700 hover:bg-green-50/30", activeColor: "border-green-600 bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-400 ring-2 ring-green-600/25" },
   { value: "mild", icon: Frown, label: "Leve", color: "border-amber-200 text-amber-700 hover:bg-amber-50/30", activeColor: "border-amber-600 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 ring-2 ring-amber-600/25" },
@@ -570,7 +580,7 @@ export function FeedingPageClient({
 
               <div className="grid grid-cols-2 gap-3">
                 {filteredFoods.map((f) => {
-                  const s = STATUS_INFO[f.status] ?? STATUS_INFO.untried;
+                  const s = getStatusInfo(f.status);
                   const hasAllergens = f.allergens.length > 0;
                   const IconComp = CATEGORY_ICONS[f.category] ?? Utensils;
                   return (
@@ -707,10 +717,10 @@ export function FeedingPageClient({
                   <span className="text-neutral-400">Estado de Tolerancia</span>
                   <span
                     className={`px-2.5 py-0.5 rounded-full text-xs font-bold border ${
-                      STATUS_INFO[selectedFood.status].color
+                      getStatusInfo(selectedFood.status).color
                     }`}
                   >
-                    {STATUS_INFO[selectedFood.status].label}
+                    {getStatusInfo(selectedFood.status).label}
                   </span>
                 </div>
                 <div className="flex justify-between items-center py-2.5 border-b border-neutral-100 dark:border-neutral-800 text-sm">
@@ -1097,7 +1107,7 @@ export function FeedingPageClient({
           </thead>
           <tbody>
             {foods.map((f) => {
-              const s = STATUS_INFO[f.status];
+              const s = getStatusInfo(f.status);
               const latestToma = f.history[0];
               return (
                 <tr key={f.id} className="hover:bg-neutral-50/50">
