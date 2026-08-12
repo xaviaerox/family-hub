@@ -30,6 +30,7 @@ import {
   Meh,
   LayoutGrid,
   ClipboardList,
+  Sparkles,
   type LucideIcon
 } from "lucide-react";
 
@@ -42,21 +43,25 @@ interface DBAllergen {
 const CATEGORIES = [
   { slug: "all", label: "Todos" },
   { slug: "fruta", label: "Frutas" },
-  { slug: "verdura", label: "Verduras" },
-  { slug: "proteína", label: "Proteínas" },
+  { slug: "verdura", label: "Verduras y Hortalizas" },
   { slug: "cereal", label: "Cereales" },
   { slug: "legumbre", label: "Legumbres" },
+  { slug: "proteína", label: "Proteínas" },
   { slug: "lácteo", label: "Lácteos" },
+  { slug: "frutos_secos", label: "Frutos Secos" },
+  { slug: "semillas", label: "Semillas" },
   { slug: "otro", label: "Otros" },
 ];
 
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
   fruta: Apple,
   verdura: Carrot,
-  proteína: Drumstick,
   cereal: Wheat,
   legumbre: Sprout,
+  proteína: Drumstick,
   lácteo: Milk,
+  frutos_secos: Sparkles,
+  semillas: Sprout,
   otro: Utensils,
 };
 
@@ -381,7 +386,11 @@ export function FeedingPageClient({
   return (
     <>
       {/* SCREEN CONTAINER (HIDDEN WHEN PRINTING) */}
-      <main className="mx-auto max-w-md px-6 pt-10 pb-24 print:hidden">
+      <main
+        className={`mx-auto px-4 sm:px-6 pt-10 pb-24 print:hidden transition-all duration-300 ${
+          viewMode === "poster" ? "max-w-4xl" : "max-w-md"
+        }`}
+      >
         <div className="flex justify-between items-start mb-1">
           <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">
             Alimentación de {babyName}
@@ -631,7 +640,7 @@ export function FeedingPageClient({
           </h2>
           <div className="space-y-3">
             {events.length === 0 && <p className="text-xs text-neutral-400 py-4 text-center">Aún no hay tomas registradas.</p>}
-            {events.slice(0, 10).map((e) => (
+            {events.slice(0, 3).map((e) => (
               <Card key={e.id} className="flex items-center justify-between py-3.5 px-4 shadow-sm">
                 <div className="space-y-0.5 flex-1 mr-4">
                   <p className="text-[15px] font-semibold text-neutral-900 dark:text-white">

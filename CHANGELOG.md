@@ -10,6 +10,7 @@
 - **Componente `FoodStatusCircle.tsx`**: Componente SVG interactivo para renderizar los círculos de estado (vacío, semi relleno, completo y alerta) con diseño SVG puro.
 - **Componente `FoodChecklistPoster.tsx`**: Visualizador e impresor en formato cartel ("Primeros Alimentos") categorizado por Frutas, Verduras, Hidratos, Lácteos, Proteínas, Otros Sabores y Alérgenos, con leyenda ilustrativa y bloque explicativo "Inténtalo 5 veces".
 - **Selector de Vista**: Incorporado un selector de modo de vista (Cartel Poster vs. Mosaico de Tarjetas) en la pantalla principal de Alimentación (`FeedingPageClient.tsx`).
+- **Catálogo Completo de Alimentos**: Migrado e integrado el nuevo catálogo maestro estructurado con 181 alimentos clasificados por Frutas, Verduras y Hortalizas, Cereales, Legumbres, Carnes, Pescados, Mariscos, Huevos, Lácteos, Frutos Secos, Semillas y Otros Sabores, vinculados con sus alérgenos oficiales de la EFSA.
 
 ## [0.14.0] - Tarea 14: Edición de Tomas de Alimentos y Prevención de Duplicados
 ### Añadido

@@ -34,16 +34,28 @@ const CATEGORY_CONFIG: Record<
     border: "border-amber-200/60 dark:border-amber-900/30",
   },
   verdura: {
-    label: "VERDURAS",
+    label: "VERDURAS Y HORTALIZAS",
     icon: Carrot,
     bgHeader: "bg-emerald-100/70 text-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300",
     border: "border-emerald-200/60 dark:border-emerald-900/30",
   },
   cereal: {
-    label: "HIDRATOS Y CEREALES",
+    label: "CEREALES",
     icon: Wheat,
     bgHeader: "bg-orange-100/70 text-orange-900 dark:bg-orange-950/40 dark:text-orange-300",
     border: "border-orange-200/60 dark:border-orange-900/30",
+  },
+  legumbre: {
+    label: "LEGUMBRES",
+    icon: Wheat,
+    bgHeader: "bg-teal-100/70 text-teal-900 dark:bg-teal-950/40 dark:text-teal-300",
+    border: "border-teal-200/60 dark:border-teal-900/30",
+  },
+  proteína: {
+    label: "PROTEÍNAS (CARNES, PESCADOS Y HUEVOS)",
+    icon: Drumstick,
+    bgHeader: "bg-rose-100/70 text-rose-900 dark:bg-rose-950/40 dark:text-rose-300",
+    border: "border-rose-200/60 dark:border-rose-900/30",
   },
   lácteo: {
     label: "LÁCTEOS",
@@ -51,23 +63,23 @@ const CATEGORY_CONFIG: Record<
     bgHeader: "bg-sky-100/70 text-sky-900 dark:bg-sky-950/40 dark:text-sky-300",
     border: "border-sky-200/60 dark:border-sky-900/30",
   },
-  proteína: {
-    label: "PROTEÍNA",
-    icon: Drumstick,
-    bgHeader: "bg-rose-100/70 text-rose-900 dark:bg-rose-950/40 dark:text-rose-300",
-    border: "border-rose-200/60 dark:border-rose-900/30",
+  frutos_secos: {
+    label: "FRUTOS SECOS",
+    icon: Sparkles,
+    bgHeader: "bg-yellow-100/70 text-yellow-950 dark:bg-yellow-950/40 dark:text-yellow-300",
+    border: "border-yellow-200/60 dark:border-yellow-900/30",
+  },
+  semillas: {
+    label: "SEMILLAS",
+    icon: Sparkles,
+    bgHeader: "bg-lime-100/70 text-lime-900 dark:bg-lime-950/40 dark:text-lime-300",
+    border: "border-lime-200/60 dark:border-lime-900/30",
   },
   otro: {
-    label: "OTROS SABORES",
+    label: "OTROS",
     icon: Sparkles,
     bgHeader: "bg-purple-100/70 text-purple-900 dark:bg-purple-950/40 dark:text-purple-300",
     border: "border-purple-200/60 dark:border-purple-900/30",
-  },
-  legumbre: {
-    label: "LEGUMBRES",
-    icon: Wheat,
-    bgHeader: "bg-teal-100/70 text-teal-900 dark:bg-teal-950/40 dark:text-teal-300",
-    border: "border-teal-200/60 dark:border-teal-900/30",
   },
 };
 
@@ -79,9 +91,17 @@ export function FoodChecklistPoster({ foods, babyName, onSelectFood }: FoodCheck
   const categoriesPresent = Array.from(new Set(foods.map((f) => f.category)));
 
   // Custom ordering for grid display
-  const orderedCategories = ["fruta", "verdura", "cereal", "lácteo", "proteína", "legumbre", "otro"].filter((c) =>
-    categoriesPresent.includes(c)
-  );
+  const orderedCategories = [
+    "fruta",
+    "verdura",
+    "cereal",
+    "legumbre",
+    "proteína",
+    "lácteo",
+    "frutos_secos",
+    "semillas",
+    "otro",
+  ].filter((c) => categoriesPresent.includes(c));
 
   return (
     <div className="w-full bg-[#fdfbf7] dark:bg-neutral-950 border border-amber-100 dark:border-neutral-800 rounded-3xl p-4 sm:p-6 shadow-sm transition-all duration-200">
@@ -120,7 +140,7 @@ export function FoodChecklistPoster({ foods, babyName, onSelectFood }: FoodCheck
       </div>
 
       {/* CATEGORIES GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 items-start">
         {orderedCategories.map((catKey) => {
           const config = CATEGORY_CONFIG[catKey] ?? {
             label: catKey.toUpperCase(),
@@ -136,24 +156,24 @@ export function FoodChecklistPoster({ foods, babyName, onSelectFood }: FoodCheck
           return (
             <div
               key={catKey}
-              className={`bg-white dark:bg-neutral-900 rounded-2xl border ${config.border} overflow-hidden shadow-xs flex flex-col justify-between`}
+              className={`bg-white dark:bg-neutral-900 rounded-2xl border ${config.border} overflow-hidden shadow-xs flex flex-col h-full`}
             >
               {/* CATEGORY HEADER */}
-              <div className={`px-4 py-2.5 flex items-center justify-between font-bold text-xs ${config.bgHeader}`}>
+              <div className={`px-3.5 py-2.5 flex items-center justify-between font-bold text-xs ${config.bgHeader}`}>
                 <span className="tracking-wide">{config.label}</span>
-                <IconComp size={16} />
+                <IconComp size={16} className="shrink-0 ml-1" />
               </div>
 
               {/* FOOD LIST */}
-              <div className="p-3 divide-y divide-neutral-100 dark:divide-neutral-800/60">
+              <div className="p-2.5 divide-y divide-neutral-100 dark:divide-neutral-800/60 flex-1">
                 {catFoods.map((food) => (
                   <button
                     key={food.id}
                     type="button"
                     onClick={() => onSelectFood(food)}
-                    className="w-full flex items-center justify-between py-2 px-1 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800/50 rounded-lg transition-colors group"
+                    className="w-full flex items-center justify-between py-2 px-1 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800/50 rounded-lg transition-colors group gap-2"
                   >
-                    <span className="text-xs font-medium text-neutral-800 dark:text-neutral-200 group-hover:text-neutral-950 dark:group-hover:text-white truncate mr-2">
+                    <span className="text-xs font-medium text-neutral-800 dark:text-neutral-200 group-hover:text-neutral-950 dark:group-hover:text-white line-clamp-2 leading-tight">
                       {food.name}
                     </span>
                     <FoodStatusCircle status={food.status} size={18} />
@@ -165,21 +185,21 @@ export function FoodChecklistPoster({ foods, babyName, onSelectFood }: FoodCheck
         })}
 
         {/* ALÉRGENOS CARD */}
-        <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-rose-200/80 dark:border-rose-900/40 overflow-hidden shadow-xs flex flex-col justify-between">
-          <div className="px-4 py-2.5 flex items-center justify-between font-bold text-xs bg-rose-100/70 text-rose-900 dark:bg-rose-950/40 dark:text-rose-300">
+        <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-rose-200/80 dark:border-rose-900/40 overflow-hidden shadow-xs flex flex-col h-full">
+          <div className="px-3.5 py-2.5 flex items-center justify-between font-bold text-xs bg-rose-100/70 text-rose-900 dark:bg-rose-950/40 dark:text-rose-300">
             <span className="tracking-wide">ALÉRGENOS PRINCIPALES</span>
-            <ShieldAlert size={16} />
+            <ShieldAlert size={16} className="shrink-0 ml-1" />
           </div>
-          <div className="p-3 divide-y divide-neutral-100 dark:divide-neutral-800/60">
+          <div className="p-2.5 divide-y divide-neutral-100 dark:divide-neutral-800/60 flex-1">
             {allergenFoods.map((food) => (
               <button
                 key={food.id}
                 type="button"
                 onClick={() => onSelectFood(food)}
-                className="w-full flex items-center justify-between py-2 px-1 text-left hover:bg-rose-50/50 dark:hover:bg-rose-950/20 rounded-lg transition-colors group"
+                className="w-full flex items-center justify-between py-2 px-1 text-left hover:bg-rose-50/50 dark:hover:bg-rose-950/20 rounded-lg transition-colors group gap-2"
               >
-                <div className="flex flex-col truncate mr-2">
-                  <span className="text-xs font-medium text-neutral-800 dark:text-neutral-200 group-hover:text-neutral-950 dark:group-hover:text-white truncate">
+                <div className="flex flex-col min-w-0 flex-1">
+                  <span className="text-xs font-medium text-neutral-800 dark:text-neutral-200 group-hover:text-neutral-950 dark:group-hover:text-white line-clamp-2 leading-tight">
                     {food.name}
                   </span>
                   <span className="text-[10px] text-rose-600/80 dark:text-rose-400/80 truncate">
