@@ -1,11 +1,136 @@
 # TASKS.md
 
-## Tarea 15 — Visualización de "Primeros Alimentos" (Checklist & Cartel Poster) ✅ COMPLETADA
+---
+
+# Resumen
+
+- **Total aproximado de tareas**: 21
+- **Tareas pendientes**: 6
+- **Tareas en progreso**: 0
+- **Tareas bloqueadas**: 0
+- **Tareas completadas**: 15
+- **Tareas canceladas o descartadas**: 0
+- **Fecha de última actualización**: 2026-08-17
+
+---
+
+# Tareas Activas
+
+## TASK-016 — Verificación de Configuración Manual Supabase en Dashboard (`human`)
+
+- **Estado**: PENDIENTE
+- **Prioridad**: ALTA
+- **Tipo**: INFRAESTRUCTURA
+- **Creada**: 2026-08-12
+- **Iniciada**: Desconocida
+- **Completada**: Desconocida
 
 ### Contexto
+Tras la unificación del esquema `family_hub` en el proyecto Supabase `human` (TASK-006 / ADR 0007), quedan dos pasos manuales que deben realizarse desde el Dashboard de Supabase para que las APIs y callbacks de autenticación funcionen correctamente en entorno real.
+
+### Subtareas
+- [ ] Añadir `family_hub` a "Exposed schemas" en Project Settings → API de `human`.
+- [ ] Añadir la URL de callback de Family Hub a "Redirect URLs" en Authentication → URL Configuration de `human`.
+- [ ] Probar el flujo completo e2e (login → onboarding → alimentación) contra el proyecto `human` real.
+
+---
+
+# Próximas Tareas
+
+## TASK-017 — Módulo de Sueño (Sleep Tracker)
+
+- **Estado**: PENDIENTE
+- **Prioridad**: MEDIA
+- **Tipo**: FEATURE
+- **Creada**: 2026-08-17
+- **Contexto**: Registro y seguimiento de tomas de sueño (siestas, sueño nocturno, despertares) y estadísticas básicas de descanso infantil.
+- **Dependencias**: TASK-009 (Dashboard base & gestión de bebés).
+
+## TASK-018 — Módulo de Diario e Hitos Diarios (Journal & Milestones)
+
+- **Estado**: PENDIENTE
+- **Prioridad**: MEDIA
+- **Tipo**: FEATURE
+- **Creada**: 2026-08-17
+- **Contexto**: Registro diario de momentos especiales, fotos destacadas, notas familiares e hitos del desarrollo no clínicos.
+- **Dependencias**: TASK-009.
+
+## TASK-019 — Capa de Inteligencia Artificial Local (WebLLM sobre Knowledge)
+
+- **Estado**: PENDIENTE
+- **Prioridad**: BAJA
+- **Tipo**: FEATURE
+- **Creada**: 2026-08-17
+- **Contexto**: Integración de motor IA cliente en navegador (WebLLM) sin coste ni API key externa sobre la base de conocimiento estructurada de `knowledge/`.
+- **Dependencias**: TASK-001, TASK-004.
+
+## TASK-020 — Compartición con Pediatras y Exportación Avanzada
+
+- **Estado**: PENDIENTE
+- **Prioridad**: BAJA
+- **Tipo**: FEATURE
+- **Creada**: 2026-08-17
+- **Contexto**: Generación de informes resumidos descargables/compartibles para revisiones pediátricas con gráficas de percentiles e historial de inmunización/alimentación.
+- **Dependencias**: TASK-008, TASK-012, TASK-013.
+
+## TASK-021 — SaaS Multi-Familia & Self-Service Onboarding
+
+- **Estado**: PENDIENTE
+- **Prioridad**: BAJA
+- **Tipo**: INFRAESTRUCTURA
+- **Creada**: 2026-08-17
+- **Contexto**: Onboarding avanzado self-service, gestión de organizaciones y planes (si aplica a futuro para la plataforma).
+- **Dependencias**: TASK-003, TASK-006.
+
+---
+
+# Tareas Bloqueadas
+
+*No existen tareas bloqueadas actualmente.*
+
+---
+
+# Deuda Técnica
+
+## TASK-DT-001 — Optimización de Consultas RLS y Función `is_family_admin`
+
+- **Estado**: PENDIENTE
+- **Prioridad**: MEDIA
+- **Tipo**: DEUDA_TÉCNICA
+- **Creada**: 2026-08-10
+- **Contexto**: Revisión periódica de políticas RLS y funciones PL/pgSQL en `family_hub_private` para asegurar rendimiento óptimo a medida que crezca el volumen de datos en `feeding_events` y `growth_measurements`.
+
+---
+
+# Bugs Conocidos
+
+*No existen bugs conocidos abiertos en este momento. Todos los bugs identificados durante el desarrollo de tareas anteriores han sido resueltos y registrados en el Historial de Tareas.*
+
+---
+
+# Ideas / Mejoras Futuras
+
+- **Generador de Menús Pediátricos**: Creación de sugerencias de menú semanal basadas en los alimentos ya tolerados por el bebé.
+- **Integración con Widgets PWA**: Registro por voz o atajos de widget en pantalla de inicio de teléfono móvil.
+- **Sincronización Offline Avanzada**: Service Worker cache completo para registro en zonas sin cobertura con sincronización diferida (Background Sync API).
+
+---
+
+# Historial de Tareas
+
+## TASK-015 — Visualización de "Primeros Alimentos" (Checklist & Cartel Poster)
+
+- **Estado**: COMPLETADA
+- **Prioridad**: ALTA
+- **Tipo**: FEATURE
+- **Creada**: 2026-08-11
+- **Iniciada**: 2026-08-11
+- **Completada**: 2026-08-12
+
+### Descripción
 El usuario solicitó una visualización genérica e interactiva tipo cartel/poster ("Primeros Alimentos") basada en una imagen de referencia, para ver de un vistazo los alimentos por probar con un círculo en blanco (⚪), probados con círculo semi relleno (🌓) y tolerados con círculo completo (🌑).
 
-### Resumen
+### Resultado
 - **Dominio (`foodStatus.ts`)**: Creado el módulo de cálculo de estado de tolerancia de alimentos con pruebas unitarias (`foodStatus.test.ts`):
   - `untried`: 0 tomas (Círculo en blanco ⚪).
   - `trying`: 1-2 tomas sin reacción (Círculo semi relleno 🌓).
@@ -17,392 +142,311 @@ El usuario solicitó una visualización genérica e interactiva tipo cartel/post
   - `FeedingPageClient.tsx`: Integrado un selector de vista (Cartel Poster vs. Tarjetas Mosaico).
 
 ### Archivos creados / modificados
-- [foodStatus.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/domain/feeding/foodStatus.ts) [NUEVO]
-- [foodStatus.test.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/domain/feeding/__tests__/foodStatus.test.ts) [NUEVO]
-- [FoodStatusCircle.tsx](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/presentation/components/feeding/FoodStatusCircle.tsx) [NUEVO]
-- [FoodChecklistPoster.tsx](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/presentation/components/feeding/FoodChecklistPoster.tsx) [NUEVO]
+- [foodStatus.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/domain/feeding/foodStatus.ts)
+- [foodStatus.test.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/domain/feeding/__tests__/foodStatus.test.ts)
+- [FoodStatusCircle.tsx](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/presentation/components/feeding/FoodStatusCircle.tsx)
+- [FoodChecklistPoster.tsx](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/presentation/components/feeding/FoodChecklistPoster.tsx)
 - [listFeeding.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/application/feeding/listFeeding.ts)
 - [FeedingPageClient.tsx](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/presentation/components/feeding/FeedingPageClient.tsx)
 - [CHANGELOG.md](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/CHANGELOG.md)
-- [TASKS.md](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/TASKS.md)
 
 ---
 
-## Tarea 14 — Edición de Tomas de Alimentos y Prevención de Duplicados ✅ COMPLETADA
+## TASK-014 — Edición de Tomas de Alimentos y Prevención de Duplicados
 
-### Contexto
+- **Estado**: COMPLETADA
+- **Prioridad**: ALTA
+- **Tipo**: FEATURE
+- **Creada**: 2026-08-10
+- **Iniciada**: 2026-08-10
+- **Completada**: 2026-08-10
+
+### Descripción
 El usuario solicitó que las tomas de alimentos registradas ("hitos") se puedan editar con posterioridad para ajustar la reacción (por si aparece algún síntoma o alergia más tarde) o para añadir/modificar observaciones (por si olvidó incluir algún detalle). También se identificaron alimentos personalizados duplicados (por ejemplo, "Sandia"), requiriendo consolidación y mecanismos para evitar duplicados en el futuro.
 
-### Resumen
+### Resultado
 - **Zod Schema**: Definido `updateFeedingEventSchema` para validar la edición (`eventId` UUID, `reaction` enum, `notes` string opcional).
 - **Aplicación**: Añadido el caso de uso `updateFeedingEvent.ts` para persistir los cambios en la tabla `feeding_events` de Supabase.
 - **Consultas**: Modificada la capa de consulta `listFeeding.ts` para incluir el `id` del evento en cada `FeedingHistoryEntry`.
 - **Interfaz (UI)**:
-  - Añadido un botón de edición (icono lápiz) a la derecha de cada toma en la sección "Últimas Tomas" de la pantalla principal.
-  - Añadido un botón de edición al lado de cada toma en el "Historial de Tomas" dentro del cajón de detalles de cada alimento.
-  - Añadido un Edit Modal con un formulario de edición rápida que cuenta con el selector visual de reacciones (Ninguna, Leve, Moderada, Grave) y campo de observaciones.
-  - Sincronización local reactiva (`handleUpdated`) que recalcula el estado de tolerancia del alimento ("Tolerado", "Alerta Leve", "Alergia/Grave") y los alérgenos sin requerir recargar la página.
-- **Validación anti-duplicados**: Implementada comprobación de duplicados insensible a mayúsculas, minúsculas, acentos y espacios al crear alimentos en el cliente.
-- **Migración DDL Supabase**: Creada migración `0007_prevent_duplicate_food_items.sql` que establece un índice único compuesto `(family_id, name)` para evitar duplicidad de nombres a nivel de base de datos.
-- **Limpieza de "Sandia"**: Ejecutado un script de limpieza SQL en Supabase para borrar la sandía inactiva (ID `3944e8e1-...`) junto con su toma inicial redundante de prueba, dejando la sandía en uso con exactamente sus 2 tomas de resultado positivo.
+  - Botones de edición en "Últimas Tomas" e "Historial de Tomas" en modal de alimento.
+  - Edit Modal con selector visual de reacciones (Ninguna, Leve, Moderada, Grave) y observaciones.
+  - Sincronización local reactiva (`handleUpdated`) que recalcula el estado de tolerancia del alimento y los alérgenos sin forzar recarga.
+- **Validación anti-duplicados**: Comprobación insensible a acentos/mayúsculas en cliente.
+- **Migración DDL Supabase**: Creada migración `0007_prevent_duplicate_food_items.sql` (índice único compuesto `(family_id, name)`).
+- **Limpieza de "Sandia"**: Ejecutado script de limpieza SQL en Supabase para borrar la sandía inactiva junto con su toma inicial redundante.
 
-### Archivos modificados
+### Archivos creados / modificados
 - [feeding.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/shared/schemas/feeding.ts)
-- [updateFeedingEvent.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/application/feeding/updateFeedingEvent.ts) [NUEVO]
+- [updateFeedingEvent.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/application/feeding/updateFeedingEvent.ts)
 - [listFeeding.ts](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/application/feeding/listFeeding.ts)
 - [FeedingPageClient.tsx](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/src/presentation/components/feeding/FeedingPageClient.tsx)
-- [0007_prevent_duplicate_food_items.sql](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/supabase/migrations/0007_prevent_duplicate_food_items.sql) [NUEVO]
+- [0007_prevent_duplicate_food_items.sql](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/supabase/migrations/0007_prevent_duplicate_food_items.sql)
 - [CHANGELOG.md](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/CHANGELOG.md)
-- [TASKS.md](file:///c:/Users/Xaviaerox/Documents/GitHub/family-hub/TASKS.md)
 
 ---
 
-## Tarea 6 — Unificación: Family Hub pasa a vivir dentro de `human` ✅ COMPLETADA
+## TASK-013 — Persistencia de Vacunas, Creador de Alimentos e Hitos OMS
 
-### Contexto
-El usuario confirmó que las mismas familias usarán `human` y Family Hub,
-y que no le importa compartir el mismo pool de usuarios. Pidió unificar
-ambos proyectos en uno solo sin arriesgar en absoluto los datos reales de
-`human` (5 perfiles, 1 familia, cientos de eventos, app en producción).
+- **Estado**: COMPLETADA
+- **Prioridad**: ALTA
+- **Tipo**: FEATURE
+- **Creada**: 2026-08-09
+- **Iniciada**: 2026-08-09
+- **Completada**: 2026-08-09
 
-### Resumen
-Todo el esquema de Family Hub se trasladó a un schema propio
-(`family_hub` + `family_hub_private`) dentro del proyecto Supabase
-`human`, sin tocar nada del schema `public` de esa app. Verificado antes
-y después con conteos de filas idénticos y `get_advisors` sin avisos
-nuevos. El código de la app se reapuntó al proyecto `human` con el schema
-`family_hub` configurado explícitamente en el cliente Supabase.
+### Descripción
+Crear persistencia real para vacunas registradas en la cartilla de inmunización, catálogo de hitos de desarrollo OMS con estimación por edad corregida/cronológica y modal de creación de alimentos personalizados vinculados a alérgenos.
 
-### Verificaciones de seguridad realizadas ANTES de tocar nada
-- Comprobación de schemas existentes en `human`: sin colisión.
-- Comprobación de tipos enum en `public`: sin colisión (`human` ya tenía
-  sus propias tablas `families`/`family_invites` en `public`, de ahí que
-  un schema separado fuera obligatorio, no una preferencia).
-- Conteo de filas de las tablas de `human` antes de migrar.
+### Resultado
+- Tabla `vaccine_logs` en Supabase con RLS y sync en tiempo real en la cartilla de inmunización de Salud.
+- Pestaña de "Desarrollo" en Crecimiento con 10 hitos clave de la OMS, cálculo de fecha estimada según edad cronológica o corregida, y guardado persistente en `development_milestone_logs`.
+- Rastreador clínico de alérgenos que computa el estado (Probado, Reacción, Pendiente) de los 14 alérgenos principales regulados por la EFSA.
+- Alta de alimentos personalizados vinculados a alérgenos guardados en `food_items` por `family_id`.
 
-### Verificaciones DESPUÉS de migrar
-- Mismos conteos de filas exactos en `human`.
-- `get_advisors` (security y performance): todos los avisos preexistentes
-  son de `public` (de `human`, no introducidos por esta tarea); los únicos
-  ítems de `family_hub` son `INFO` de índice sin uso (normal, tablas
-  recién creadas).
-- `tsc --noEmit`, `next lint`, `next build`: todos en verde, apuntando ya
-  al proyecto `human`.
+---
+
+## TASK-012 — Módulo de Crecimiento y Percentiles OMS
+
+- **Estado**: COMPLETADA
+- **Prioridad**: ALTA
+- **Tipo**: FEATURE
+- **Creada**: 2026-08-08
+- **Iniciada**: 2026-08-08
+- **Completada**: 2026-08-08
+
+### Descripción
+Implementar el módulo de crecimiento infantil con cálculo de percentiles clínicos OMS (peso, talla, perímetro cefálico) y gráfica interactiva SVG autoadaptable.
+
+### Resultado
+- Tabla `growth_measurements` en Supabase con políticas RLS por familia.
+- Modelo matemático de interpolación lineal para estimar percentiles clínicos OMS en caliente (0 a 12 meses).
+- Gráfica dinámica SVG pura que grafica percentiles de referencia (p3, p50, p97) y dibuja la curva de crecimiento real del bebé seleccionado.
+- Soporte para corregir la edad en bebés nacidos prematuros (FPP / `due_date`) con interruptor de activación.
+- Formulario de alta, edición y borrado de mediciones en listado histórico.
+
+---
+
+## TASK-011 — Regionalización por Provincias y Vacunación Personalizada
+
+- **Estado**: COMPLETADA
+- **Prioridad**: MEDIA
+- **Tipo**: FEATURE
+- **Creada**: 2026-08-07
+- **Iniciada**: 2026-08-07
+- **Completada**: 2026-08-07
+
+### Descripción
+Añadir soporte regional para el calendario vacunal de las 52 provincias españolas y cálculo personalizado de fechas estimadas por bebé.
+
+### Resultado
+- Columna `province` en la tabla `babies` en Supabase.
+- Catálogo oficial de las 52 provincias de España en `src/shared/constants/provinces.ts` e selector dropdown en formularios de bebé.
+- Cartilla de vacunación inteligente en Salud con conmutación entre bebés de la familia por avatar y estimación exacta de fechas de administración (a los 2, 4, 11 y 12 meses).
+
+---
+
+## TASK-010 — Sistema de Fotos y Avatares de Bebés
+
+- **Estado**: COMPLETADA
+- **Prioridad**: MEDIA
+- **Tipo**: FEATURE
+- **Creada**: 2026-08-06
+- **Iniciada**: 2026-08-06
+- **Completada**: 2026-08-06
+
+### Descripción
+Añadir soporte para personalizar el perfil visual del bebé mediante foto propia o avatares vectoriales de animales.
+
+### Resultado
+- Columna `photo_url` en la tabla `babies` en Supabase.
+- Componente `BabyAvatar` con presets vectoriales SVG de animales (Koala 🐨, Panda 🐼, León 🦁, Oso 🐻, Conejo 🐰) y soporte para URLs de fotos personalizadas.
+- Integración en modal de edición de perfil y formulario de alta de nuevo bebé.
+
+---
+
+## TASK-009 — Reestructuración de Paneles y Gestión de Bebés
+
+- **Estado**: COMPLETADA
+- **Prioridad**: ALTA
+- **Tipo**: FEATURE
+- **Creada**: 2026-08-05
+- **Iniciada**: 2026-08-05
+- **Completada**: 2026-08-05
+
+### Descripción
+Crear pantalla principal ("Hoy") con visualización avanzada de bebés, edad exacta y barra de progreso cuantitativo de alimentación, además de edición y borrado lógico seguro.
+
+### Resultado
+- Reubicación de la generación de códigos de invitación (`InviteGenerator`) a la pestaña de Ajustes (restringido por rol administrativo).
+- Home de alta fidelidad ("Hoy") con `DashboardClient`, avatares pastel, cálculo automático de edad exacta en años/meses/días y barra de progreso de alimentación.
+- Configuración `⚙️` en tarjetas de bebé para actualización en caliente de nombre/nacimiento y borrado lógico seguro (`deleted_at = now()`) protegido con confirmación.
+
+---
+
+## TASK-008 — Rigor Médico, Navegación y Exportación
+
+- **Estado**: COMPLETADA
+- **Prioridad**: ALTA
+- **Tipo**: FEATURE
+- **Creada**: 2026-08-04
+- **Iniciada**: 2026-08-04
+- **Completada**: 2026-08-04
+
+### Descripción
+Incorporar rigor médico acreditado en `sources.md`, exportación en PDF para informes clínicos y ampliar la navegación inferior a 5 secciones principales.
+
+### Resultado
+- 5 nuevas fuentes pediátricas y clínicas oficiales registradas en `sources.md` (edades mínimas estrictas: Miel/espinacas 12m, frutos secos enteros 5a, pez espada 10a).
+- Exportación PDF A4 maquetada mediante CSS de impresión (`print:block`) para informes clínicos.
+- Botonera inferior (`BottomNav`) ampliada a 5 secciones (Hoy, Alimentación, Crecimiento, Salud, Ajustes) con iconos Lucide.
+- Reemplazo de emojis por iconos minimalistas de Lucide en tarjetas y formularios.
+
+---
+
+## TASK-007 — Panel de Alimentación Completo y Premium
+
+- **Estado**: COMPLETADA
+- **Prioridad**: ALTA
+- **Tipo**: FEATURE
+- **Creada**: 2026-08-03
+- **Iniciada**: 2026-08-03
+- **Completada**: 2026-08-03
+
+### Descripción
+Diseñar e implementar la experiencia completa de Alimentación Complementaria con catálogo categorizado por pestañas, semáforo de tolerancia, drawer de detalles y corrección de bucle RLS.
+
+### Resultado
+- Catálogo ampliado a 12 nuevos alimentos y semáforo visual de tolerancia (🟢 Tolerado, 🟡 Alerta Leve, 🔴 Alergia, ⚪ Pendiente).
+- Selector de reacciones visuales y observaciones en `QuickFeedingForm`.
+- Drawer deslizable con detalles de alérgenos y línea de tiempo cronológica.
+- Corrección de bucle de recursión RLS convirtiendo `is_family_member` a PL/pgSQL y creando `is_family_admin`.
+
+---
+
+## TASK-006 — Unificación: Family Hub pasa a vivir dentro de `human`
+
+- **Estado**: COMPLETADA
+- **Prioridad**: CRÍTICA
+- **Tipo**: INFRAESTRUCTURA
+- **Creada**: 2026-08-02
+- **Iniciada**: 2026-08-02
+- **Completada**: 2026-08-02
+
+### Descripción
+Unificar la infraestructura de Supabase trasladando todo el esquema de Family Hub a un schema aislado (`family_hub` + `family_hub_private`) dentro del proyecto Supabase en producción de `human`, eliminando el problema de límites de proyectos gratuitos y el riesgo de pausar/reanudar.
+
+### Resultado
+- Todo el esquema trasladado a `family_hub` en el proyecto `human` sin alterar `public`.
+- Código de cliente Supabase actualizado con `db.schema: "family_hub"` y alias `TypedSupabaseClient`.
+- ADR 0007 redactado y publicado.
+- Verificación con conteos de filas idénticos y `get_advisors` limpio.
 
 ### Archivos modificados
-`src/infrastructure/supabase/{client,server,middleware,database.types}.ts`
-(schema `family_hub` configurado explícitamente; alias `TypedSupabaseClient`
-para no repetirlo en cada archivo), toda `src/application/**` actualizada
-al nuevo alias, `.env.example`, `docs/adr/0007-*.md`,
-`supabase/migrations/0005_*.sql` y `0006_*.sql` (nuevas, reflejan el
-estado real dentro de `human`; 0001-0004 quedan como histórico del
-proyecto standalone, ya pausado).
-
-### Pasos manuales pendientes (el usuario debe hacerlos en el Dashboard)
-1. Añadir `family_hub` a "Exposed schemas" en Project Settings → API de
-   `human`.
-2. Añadir la URL de callback de Family Hub a "Redirect URLs" en
-   Authentication → URL Configuration de `human`.
-
-Sin estos dos pasos, la app no funcionará aunque el código y el esquema
-estén listos.
-
-### Decisiones tomadas
-- Proyecto standalone `family-hub` pausado permanentemente (no borrado,
-  por si hace falta consultarlo), ya no se reanuda.
-- Regla de memoria actualizada: ya no hace falta pausar nada — `human` y
-  `Aerogym` quedan siempre activos sin conflicto de cupo.
-- Patrón "schema propio + `_private` para RLS" documentado como estándar
-  reutilizable para cualquier convivencia futura de proyectos.
-
-### Próximo paso recomendado
-Confirmar contigo que has completado los 2 pasos manuales del Dashboard,
-y probar el flujo completo (login → onboarding → alimentación) contra el
-proyecto `human` real. Después, seguir con el siguiente módulo del
-ROADMAP.
+- `src/infrastructure/supabase/{client,server,middleware,database.types}.ts`
+- `docs/adr/0007-unify-into-human-project.md`
+- `supabase/migrations/0005_unify_into_human_family_hub_schema.sql`
+- `supabase/migrations/0006_seed_family_hub_catalog.sql`
 
 ---
 
-## Tarea 5 — Iconos PWA, tests automatizados, estadísticas básicas ✅ COMPLETADA
+## TASK-005 — Iconos PWA, Tests Automatizados y Estadísticas Básicas
 
-### Contexto
-El usuario decidió no pausar `Aerogym`/`human` ni pasar a plan de pago;
-la solución propuesta para el riesgo del ADR 0006 (cuenta Supabase nueva
-y separada) queda pendiente de que el usuario cree esa cuenta. Mientras
-tanto, se avanzó en tareas no bloqueantes ya identificadas como pendientes.
+- **Estado**: COMPLETADA
+- **Prioridad**: MEDIA
+- **Tipo**: TEST
+- **Creada**: 2026-08-01
+- **Iniciada**: 2026-08-01
+- **Completada**: 2026-08-01
 
-### ⚠️ Actualización importante del ADR 0006
-Al investigar a fondo un tercer incidente de "esquema aparentemente
-vacío" tras reanudar `family-hub`, se confirmó que **no hubo pérdida
-real**: todas las tablas, las 12 policies RLS (sin duplicados) y los
-datos existentes seguían intactos. Los incidentes previos eran, con alta
-probabilidad, el mismo fenómeno: una lectura obsoleta justo tras
-reanudar, no una pérdida real de esquema. **Esto rebaja significativamente
-la severidad del riesgo** — la propuesta de crear una cuenta Supabase
-nueva sigue siendo válida como solución definitiva y más tranquila, pero
-ya no es urgente: el patrón actual (pausar/reanudar) parece más seguro de
-lo que se pensó en la Tarea 4.
+### Descripción
+Generar conjunto completo de iconos PWA, implementar suite de tests unitarios/integración con Vitest para el dominio crítico y añadir estadísticas básicas de alimentación.
 
-### Resumen
-- **Iconos PWA reales**: generados en 4 tamaños (192, 512, 512 maskable,
-  apple-touch-icon), referenciados en `manifest.json` y en los metadatos
-  de Next.js. Ya no queda `icons: []` vacío.
-- **Tests automatizados** (Vitest) para todo el dominio crítico: edad
-  corregida, edad mínima, regla de los 3 días, resumen de progreso — 16
-  tests, todos en verde.
-- **Estadísticas básicas de alimentación** (Fase 1 del ROADMAP): conteo
-  de alimentos distintos introducidos y total de tomas, en la propia
-  página de Alimentación. Sin gráficas ni complejidad añadida.
-- **Catálogo ampliado** de 15 a 20 alimentos (5 nuevos, misma fuente ya
-  citada, sin alérgenos nuevos).
-
-### Archivos creados/modificados
-`public/icons/*.png`, `public/manifest.json`, `src/app/layout.tsx`,
-`vitest.config.ts`, `package.json` (script `test`),
-`src/domain/{baby,feeding}/__tests__/*.test.ts`,
-`src/domain/feeding/progressSummary.ts`,
-`src/presentation/components/feeding/FeedingPageClient.tsx` (resumen),
-`src/application/feeding/listFeeding.ts` (añadido `foodItemId`),
-`knowledge/foods/starter-catalog.md` (ampliado),
-`supabase/migrations/0004_seed_allergens_and_food_items.sql` (sincronizado),
-`docs/adr/0006-*.md` (corregido).
-
-### Decisiones tomadas
-- Antes de reaplicar migraciones ante una lectura "vacía", ahora se
-  verifica con varias fuentes (`pg_tables`, `pg_policies`, conteo real)
-  antes de concluir nada — evita el riesgo de reinsertar datos ya
-  existentes (estuvo a punto de pasar en esta misma tarea).
-- Estadísticas deliberadamente mínimas: solo conteos, sin gráficas.
-
-### Verificación realizada
-- `npx vitest run` → 16/16 tests en verde.
-- `npx tsc --noEmit`, `npx next lint`, `npx next build` → todos en verde.
-- Catálogo verificado en BD: 20 alimentos, sin duplicados.
-
-### Próximo paso recomendado
-Sigue pendiente, a decisión del usuario: crear una cuenta Supabase nueva
-para `family-hub` (ya no urgente, pero sigue siendo la solución más
-tranquila a largo plazo). Después: siguiente módulo del ROADMAP
-(Crecimiento u otro), aplicando siempre las 5 preguntas de RULES.md #13.
+### Resultado
+- Iconos PWA reales generados en 4 tamaños (192, 512, 512 maskable, apple-touch-icon) y configurados en `manifest.json`.
+- 16 tests automatizados en Vitest para edad corregida, edad mínima, regla de 3 días y resumen de progreso (100% verde).
+- Conteos de alimentos distintos introducidos y total de tomas en la UI de Alimentación.
+- Catálogo ampliado de 15 a 20 alimentos.
 
 ---
 
-## Tarea 4 — Módulo Alimentación: catálogo + motor de reglas ✅ COMPLETADA
+## TASK-004 — Módulo Alimentación: Catálogo Maestro y Motor de Reglas
 
-### ⚠️ Aviso importante (leer antes de la próxima tarea)
-Se ha confirmado que **pausar y reanudar `family-hub` borra el esquema de
-la base de datos** (no es comportamiento estándar de Supabase, pero se ha
-observado dos veces de forma verificada). Mientras no haya datos reales
-de usuarios, el impacto es bajo porque las migraciones se reaplican desde
-`supabase/migrations/`, pero es un riesgo real que hay que resolver antes
-de tener datos de producción. Ver ADR 0006 para el detalle completo.
-**Recomendación:** valorar dejar de pausar `family-hub` en cuanto haya
-datos reales que importe conservar, incluso si eso implica revisar el
-límite de proyectos gratuitos con el usuario en ese momento.
+- **Estado**: COMPLETADA
+- **Prioridad**: ALTA
+- **Tipo**: FEATURE
+- **Creada**: 2026-07-28
+- **Iniciada**: 2026-07-28
+- **Completada**: 2026-07-30
 
-### Resumen
-Catálogo maestro de alimentos y alérgenos (poblado exactamente desde
-`knowledge/`, con fuentes oficiales citadas y verificadas por búsqueda:
-AEP/SEGHNP/ESPGHAN y Reglamento UE 1169/2011), motor de reglas de dominio
-(edad mínima/corregida + regla de los 3 días), y UI de registro rápido +
-alta de bebé (necesaria para que el módulo tenga sentido, no estaba
-construida aún). Verificado con `tsc --noEmit`, `next lint` y
-`next build` reales.
+### Descripción
+Crear el catálogo maestro de alimentos y alérgenos EFSA desde `knowledge/`, motor de reglas de dominio (edad mínima, edad corregida, regla de los 3 días) y UI de registro rápido más alta de bebé.
 
-### Archivos creados
-**Dominio:** `src/domain/feeding/{types,minimumAge,threeDayRule}.ts`
-**Aplicación:** `src/application/feeding/{getFeedingRecommendation,
-registerFeedingEvent,listFeeding}.ts`, `src/application/baby/createBaby.ts`
-**Presentación:** `src/app/dashboard/babies/new`,
-`src/app/dashboard/feeding/[babyId]`,
-`src/presentation/components/feeding/{QuickFeedingForm,FeedingPageClient}.tsx`
-**Conocimiento:** `knowledge/allergens/efsa-14.md`,
-`knowledge/feeding-guides/start-window.md`,
-`knowledge/foods/starter-catalog.md`; `knowledge/medical-sources/sources.md`
-actualizado con URLs reales verificadas.
-**Base de datos:** migraciones `0003_feeding_module_schema.sql`,
-`0003b_consolidate_family_members_insert_policy.sql`,
-`0004_seed_allergens_and_food_items.sql`; `docs/adr/0006-*.md`.
-
-### Decisiones tomadas
-- Motor de reglas **avisa, no bloquea**: coherente con "nunca obligar
-  información innecesaria" — los padres deciden con el aviso delante.
-- `feeding_events` aislado vía subconsulta a `babies.family_id` (no
-  denormalizado), evitando complejidad de sincronización adicional.
-- `food_items`/`allergens` son catálogo compartido (no tenant-scoped),
-  de solo lectura para el cliente — se gestionan solo vía migraciones.
-- **Hallazgo de rendimiento arrastrado de la Tarea 3:** dos policies
-  permisivas duplicadas en el INSERT de `family_members` (no se revisó
-  `get_advisors` de performance entonces). Consolidadas en una sola.
-- **Hallazgo de infraestructura:** ver aviso arriba y ADR 0006.
-- Se añadió alta de bebé (`/dashboard/babies/new`), no estaba en el plan
-  original de esta tarea pero es un prerrequisito real sin el cual
-  Alimentación no se puede usar.
-
-### Verificación realizada
-- `npm install`, `npx tsc --noEmit` → 0 errores.
-- `npx next lint` → 0 warnings/errores.
-- `npx next build` → 9 rutas compiladas correctamente.
-- Migraciones aplicadas sobre el proyecto real; `get_advisors` security
-  → solo el WARN ya aceptado (ADR 0004); performance → 0 WARN (antes 5).
-- Catálogo verificado por consulta SQL directa tras el seed (15
-  alimentos, alérgenos correctamente relacionados).
-
-### Próximo paso recomendado
-**Tarea 5**: antes de seguir sumando módulos, resolver o mitigar el riesgo
-del ADR 0006 (posiblemente dejando de pausar `family-hub` a partir de
-ahora, a decidir con el usuario). Después: estadísticas básicas de
-alimentación (fase 1 del ROADMAP) o el siguiente módulo (Crecimiento),
-aplicando siempre las 5 preguntas de RULES.md #13 antes de empezar.
+### Resultado
+- Dominio `src/domain/feeding/` con motor de reglas no bloqueante.
+- Tablas `allergens`, `food_items`, `food_allergens`, `feeding_events` creadas.
+- Alta de bebé `/dashboard/babies/new`.
+- Conocimiento certificado en `knowledge/allergens/efsa-14.md` y `knowledge/foods/starter-catalog.md`.
+- ADR 0006 redactado.
 
 ---
 
-## Tarea 3 — Auth (magic link) + invitación por código + Dashboard base ✅ COMPLETADA
+## TASK-003 — Auth (Magic Link) + Invitación por Código + Dashboard Base
 
-### Resumen
-Auth sin contraseña (magic link), flujo completo de creación de familia y
-unión mediante código de invitación, y un Dashboard base mobile-first con
-navegación inferior. Verificado con `tsc --noEmit`, `next lint` y
-`next build` reales, no solo revisión visual del código.
+- **Estado**: COMPLETADA
+- **Prioridad**: ALTA
+- **Tipo**: FEATURE
+- **Creada**: 2026-07-25
+- **Iniciada**: 2026-07-25
+- **Completada**: 2026-07-27
 
-### Archivos creados
-**Dominio:** `src/domain/family/invite.ts`
-**Aplicación:** `src/application/auth/sendMagicLink.ts`,
-`src/application/family/createFamilyWithCreator.ts`,
-`src/application/family/createInvite.ts`,
-`src/application/family/joinFamilyWithCode.ts`
-**Infraestructura:** `src/infrastructure/supabase/client.ts`, `server.ts`,
-`middleware.ts`, `database.types.ts` (actualizado)
-**Presentación:** `src/app/login`, `src/app/auth/callback`,
-`src/app/onboarding`, `src/app/dashboard` (layout + page + settings),
-componentes `Button`, `Input`, `Card`, `BottomNav`, `InviteGenerator`,
-`SignOutButton`
-**Raíz:** `middleware.ts`, `src/app/layout.tsx`, `page.tsx`,
-`globals.css`, `postcss.config.js`, `public/manifest.json`, `.eslintrc.json`
-**Base de datos:** migración `0002_auth_family_invite_flow.sql` aplicada
-en el proyecto real; `docs/adr/0004-invite-redemption-flow.md`,
-`docs/adr/0005-pin-supabase-js-version.md`
+### Descripción
+Implementar autenticación sin contraseña mediante Magic Link de Supabase Auth, flujo de creación de familia o unión por código de invitación de 6 caracteres y Dashboard base mobile-first.
 
-### Decisiones tomadas
-- Magic link en vez de contraseña: menos fricción, coherente con "≤3
-  pulsaciones" y "sin leer instrucciones".
-- Alta del creator resuelta con una policy adicional estrecha, no un RPC
-  (ADR 0004); redención de invitación sí requiere `security definer`
-  acotado, documentado y auditado.
-- `NAV_ITEMS` del dashboard limitado a lo que existe hoy (Hoy, Ajustes);
-  no se añadió "Bebés" aunque la tabla ya existe, porque su UI no es
-  parte de esta tarea (evita funcionalidad "porque sí").
-- **Hallazgo real durante la verificación:** `npm install` con rangos
-  `^` rompía la compatibilidad de tipos entre `supabase-js` y
-  `@supabase/ssr`. Se fijaron versiones exactas compatibles (ADR 0005).
-- Gestión de proyectos Supabase: se pausó `Aerogym` solo durante el
-  trabajo en `family-hub`; al cerrar la tarea, `family-hub` vuelve a
-  quedar pausado y `Aerogym` + `human` quedan **activos**, como pediste
-  que sea la norma permanente para toda tarea futura.
-
-### Verificación realizada (no solo generación de código)
-- `npm install` real, `npx tsc --noEmit` → 0 errores.
-- `npx next lint` → 0 warnings/errores.
-- `npx next build` → build de producción completo, 7 rutas compiladas,
-  service worker PWA generado correctamente.
-- Migración aplicada sobre el proyecto Supabase real; `get_advisors`
-  (security) → 0 avisos tras el hardening de `accept_family_invite`.
-
-### Próximo paso recomendado
-**Tarea 4**: módulo Alimentación — esquema `food_items` / `allergens` /
-`feeding_events`, poblado desde `knowledge/`, y motor de reglas (3 días,
-alérgenos, edad mínima/corregida). Antes de empezarla, aplicar las 5
-preguntas de RULES.md #13.
+### Resultado
+- Login por Magic Link (`sendMagicLink.ts`).
+- Creación de familia y redención de invitaciones (`accept_family_invite` RPC security definer).
+- Navigation bar inferior (`BottomNav`) y Layout del Dashboard.
+- ADR 0004 y ADR 0005.
 
 ---
 
-## Tarea 2 — Proyecto Supabase real, aislado, + hardening ✅ COMPLETADA
+## TASK-002 — Proyecto Supabase Real, Aislado + Hardening de Seguridad
 
-### Resumen
-Se creó un proyecto Supabase **nuevo y aislado** (`family-hub`,
-`eu-west-1`, organización `Xaviaerox`) exclusivamente para este producto,
-sin tocar los proyectos existentes (`human`, `Aerogym`).
+- **Estado**: COMPLETADA
+- **Prioridad**: CRÍTICA
+- **Tipo**: INFRAESTRUCTURA
+- **Creada**: 2026-07-22
+- **Iniciada**: 2026-07-22
+- **Completada**: 2026-07-24
 
-La organización tenía el límite de 2 proyectos gratuitos activos ya
-ocupado por `human` y `Aerogym`. Por indicación explícita del usuario, se
-pausó `Aerogym` **solo durante la creación y configuración** de
-`family-hub`; al terminar esta tarea, `family-hub` se pausa y `Aerogym` se
-reanuda, de modo que ambos proyectos existentes quedan exactamente como
-estaban y `family-hub` permanece pausado hasta que se retome su desarrollo
-(no consume el cupo gratuito mientras está pausado).
+### Descripción
+Configurar el proyecto de Supabase standalone inicial, aplicar migración núcleo y realizar hardening de seguridad y rendimiento basándose en `get_advisors`.
 
-Se aplicó la migración núcleo de la Tarea 1 sobre el proyecto real y,
-tras revisar `get_advisors`, se corrigieron todos los avisos de seguridad
-y rendimiento detectados (ver ADR 0003).
-
-### Archivos modificados
-- `supabase/migrations/0001_init_core_schema.sql` — actualizado para
-  reflejar exactamente el estado real hardened (esquema `private`,
-  `(select auth.uid())`, índices FK).
-- `src/infrastructure/supabase/database.types.ts` (nuevo) — tipos
-  generados desde el esquema real.
-- `.env.example` (nuevo).
-- `docs/adr/0003-security-performance-hardening.md` (nuevo).
-- `DATABASE.md`, `CHANGELOG.md` — actualizados.
-
-### Decisiones tomadas
-- `is_family_member` → `private.is_family_member`: no expuesta por API
-  pública, solo usable en policies (ver ADR 0003).
-- `auth.uid()` envuelto en `(select ...)` en toda policy que lo usa
-  directamente, por rendimiento a escala.
-- Índice de cobertura en toda FK del esquema núcleo.
-- Gestión del límite de proyectos: pausar temporalmente en vez de
-  eliminar o pagar Pro, ya que no había necesidad real de coste.
-
-### Próximo paso recomendado
-Antes de continuar con la Tarea 3 (Auth + invitación por código +
-Dashboard base), hay que **reanudar** `family-hub` cuando quieras seguir
-desarrollando (ahora mismo queda pausado y `Aerogym` reanudado, tal como
-pediste). Aviso: reanudar `family-hub` sin pausar `Aerogym` u `human`
-volvería a topar con el límite de 2 proyectos gratuitos activos.
+### Resultado
+- Esquema `private` creado para `is_family_member` (evita exposición en API pública).
+- Optimización de `auth.uid()` a `(select auth.uid())` en políticas RLS.
+- Índices de cobertura agregados en todas las FK del esquema núcleo.
+- ADR 0003 publicado.
 
 ---
 
-## Tarea 1 — Setup del proyecto y esquema núcleo ✅ COMPLETADA
+## TASK-001 — Setup Inicial del Proyecto y Esquema Núcleo Multi-Tenant
 
-### Resumen
-Creado el esqueleto base del proyecto (Next.js/TS/Tailwind/Supabase),
-las reglas innegociables (`RULES.md`), el esquema núcleo multi-tenant
-(`families`, `family_members`, `family_invites`, `babies`) con RLS
-reutilizable, la función de dominio de edad corregida, y el esqueleto de
-`knowledge/` como fuente única de verdad médica.
+- **Estado**: COMPLETADA
+- **Prioridad**: CRÍTICA
+- **Tipo**: INFRAESTRUCTURA
+- **Creada**: 2026-07-20
+- **Iniciada**: 2026-07-20
+- **Completada**: 2026-07-21
 
-### Archivos creados
-- `package.json`, `tsconfig.json`, `tailwind.config.ts`, `next.config.js`
-- `RULES.md`
-- `docs/adr/0001-record-architecture-decisions.md`
-- `docs/adr/0002-multi-tenant-rls-pattern.md`
-- `supabase/migrations/0001_init_core_schema.sql`
-- `src/domain/baby/correctedAge.ts`
-- `src/domain/family/types.ts`
-- `knowledge/README.md`, `knowledge/medical-sources/sources.md`,
-  `knowledge/glossary/glossary.md`
-- `PROJECT.md`, `ARCHITECTURE.md`, `DATABASE.md`, `ROADMAP.md`,
-  `CHANGELOG.md`
+### Descripción
+Inicialización del proyecto Next.js + TypeScript + Tailwind CSS + Supabase Client, definición de las 13 reglas innegociables (`RULES.md`), esquema núcleo multi-tenant (`families`, `family_members`, `family_invites`, `babies`), función de edad corregida y estructura del directorio `knowledge/`.
 
-### Decisiones tomadas
-- RLS resuelto con una única función `is_family_member()` (ADR 0002),
-  no policies ad-hoc por tabla/módulo.
-- Edad corregida centralizada en `domain/baby`, no repetida por módulo.
-- IA por defecto: WebLLM (local, sin API key, sin coste), con interfaz
-  `AIProvider` para poder añadir OpenRouter u otros después sin tocar
-  el resto del proyecto.
-- `knowledge/` como fuente única para seeds de BD y para el Knowledge
-  layer de la IA — nunca se inventa contenido médico en otro sitio.
-
-### Próximo paso recomendado
-**Tarea 2**: Auth con Supabase (registro, login, creación de familia,
-invitación por código) + Dashboard base mobile-first. Requiere aprobación
-antes de iniciarse (RULES.md / regla de espera entre tareas).
-
----
-
-## Pendientes (no iniciadas)
-- Tarea 2: Auth + flujo de invitación + Dashboard base.
-- Tarea 3: Módulo Alimentación — esquema `food_items`/`allergens`/`feeding_events`.
-- Tarea 4: Motor de reglas de alimentación (3 días, alérgenos, edad mínima).
+### Resultado
+- Proyecto Next.js configurado con PWA y Tailwind.
+- `RULES.md` redactado.
+- Esquema núcleo DDL con RLS reutilizable.
+- `src/domain/baby/correctedAge.ts` implementado.
+- ADR 0001 y ADR 0002.
+- Documentación inicial: `PROJECT.md`, `ARCHITECTURE.md`, `DATABASE.md`, `ROADMAP.md`, `CHANGELOG.md`.
