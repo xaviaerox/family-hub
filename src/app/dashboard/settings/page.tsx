@@ -3,6 +3,7 @@ import { SignOutButton } from "@/presentation/components/family/SignOutButton";
 import { Card } from "@/presentation/components/ui/Card";
 import { InviteGenerator } from "@/presentation/components/family/InviteGenerator";
 import { canManageMembers } from "@/domain/family/types";
+import { APP_VERSION } from "@/shared/constants/version";
 
 export default async function SettingsPage() {
   const supabase = await createServerSupabaseClient();
@@ -60,6 +61,12 @@ export default async function SettingsPage() {
 
       <div className="mt-8">
         <SignOutButton />
+      </div>
+
+      <div className="mt-8 text-center">
+        <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono">
+          Family Hub v{APP_VERSION}
+        </span>
       </div>
     </main>
   );

@@ -639,6 +639,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
    - Escribe pruebas unitarias en `__tests__` con Vitest.
    - Ejecuta `npm run typecheck` y `npm test` para asegurar que no hay regresiones.
    - **OBLIGATORIO**: Actualiza `PROJECT_CONTEXT.md`, `TASKS.md` y `CHANGELOG.md` antes de dar la tarea por finalizada.
+4. **Gobernanza de Versionado y Releases**:
+   - `package.json` es la ÚNICA fuente técnica canónica de verdad para la versión del proyecto.
+   - Ejecuta `npm run check:version` para verificar automáticamente la consistencia de versión entre `package.json`, `PROJECT_CONTEXT.md` y `CHANGELOG.md`.
+   - Aplica Semantic Versioning (SemVer): PATCH para bugfixes/refactors compatibles, MINOR para nuevas funcionalidades compatibles, MAJOR para breaking changes/migraciones incompatibles.
+   - NUNCA reduzcas la versión ni mantengas versiones contradictorias entre la fuente canónica y la documentación o el Service Worker/PWA.
 
 ---
 

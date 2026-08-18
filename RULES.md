@@ -52,3 +52,5 @@ Estas reglas no se negocian por rapidez, por conveniencia puntual, ni porque
 
     Si alguna respuesta es insatisfactoria, la funcionalidad no se
     construye tal como está planteada.
+
+14. **Gobernanza de versionado y releases obligatoria.** `package.json` es la fuente técnica canónica de verdad de la versión (SemVer). NUNCA se mantienen versiones contradictorias entre la fuente canónica, la PWA/Service Worker y la documentación (`PROJECT_CONTEXT.md`, `CHANGELOG.md`). Toda modificación de versión debe ser trazable y verificada mediante `npm run check:version`.

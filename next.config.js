@@ -7,6 +7,8 @@ const withPWA = require("next-pwa")({
   skipWaiting: true,
 });
 
+const pkg = require("./package.json");
+
 const supabaseHostname = process.env.NEXT_PUBLIC_SUPABASE_URL
   ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
   : "vrdurepiazvavuvmeoth.supabase.co";
@@ -14,6 +16,10 @@ const supabaseHostname = process.env.NEXT_PUBLIC_SUPABASE_URL
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+
+  env: {
+    NEXT_PUBLIC_APP_VERSION: pkg.version,
+  },
 
   // ── Images ────────────────────────────────────────────────────────────────
   images: {
